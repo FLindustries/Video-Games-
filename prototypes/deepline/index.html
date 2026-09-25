@@ -93,18 +93,15 @@
   .funds { display: flex; align-items: baseline; gap: 14px; }
   .funds span { font-family: "Share Tech Mono", monospace; letter-spacing: .14em; color: var(--mist); font-size: 15px; }
   .funds strong { font-family: "Saira Stencil One", sans-serif; font-weight: 400; font-size: 54px; line-height: 1; color: var(--gold); }
-  #spec {
-    border: 1.5px solid var(--print-line); border-radius: 4px; padding: 14px 16px; min-height: 150px;
-    display: flex; flex-direction: column; gap: 6px; background: rgba(10,35,64,.7); position: relative;
+  #subStats {
+    border: 1.5px solid var(--print-line); border-radius: 4px; padding: 16px 16px 12px; position: relative;
+    background: rgba(10,35,64,.7); display: flex; flex-direction: column; gap: 6px;
+    font-family: "Share Tech Mono", monospace; font-size: 16px;
   }
-  #spec::before { content: "SPEC SHEET"; position: absolute; top: -10px; left: 12px; padding: 0 6px; background: #081a30; font-family: "Share Tech Mono", monospace; font-size: 12px; letter-spacing: .16em; color: var(--mist); }
-  #spec .sname { font-size: 21px; font-weight: 700; display: flex; gap: 10px; align-items: center; color: #f4efe2; }
-  #spec .slv { font-family: "Share Tech Mono", monospace; font-size: 13px; color: var(--mist); border: 1px solid var(--print-line); padding: 1px 8px; border-radius: 3px; }
-  #spec .sdesc { color: #a9c3dc; font-size: 16px; }
-  #spec .seff { font-family: "Share Tech Mono", monospace; font-size: 16px; }
-  #spec .seff b { color: var(--teal); font-weight: 400; }
-  #spec .scost { margin-top: auto; font-weight: 700; }
-  #spec .scost.no { color: var(--mist); font-weight: 600; }
+  #subStats::before { content: "YOUR SUB"; position: absolute; top: -10px; left: 12px; padding: 0 6px; background: #081a30; font-size: 12px; letter-spacing: .16em; color: var(--mist); }
+  #subStats div { display: flex; justify-content: space-between; gap: 10px; }
+  #subStats span { color: var(--mist); }
+  #subStats b { font-weight: 400; color: var(--print-text); }
   .report .bottom { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
   #startLine { font-family: "Share Tech Mono", monospace; font-size: 15px; color: var(--mist); }
   #startLine b { color: var(--print-text); font-weight: 400; }
@@ -120,34 +117,33 @@
   .tab .n { font-family: "Share Tech Mono", monospace; font-size: 13px; color: var(--gold); margin-left: 6px; }
   .pane { position: absolute; left: 440px; right: 0; top: 74px; bottom: 0; }
 
-  #lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-  .node {
-    --c: var(--teal);
-    position: absolute; width: 84px; height: 84px; margin: -42px 0 0 -42px; padding: 0;
-    border: 1.5px solid rgba(160,200,255,.45); border-radius: 3px; background: rgba(10,35,64,.95);
-    color: rgba(212,230,255,.55); display: grid; place-items: center;
-    transition: transform .12s ease, box-shadow .2s ease;
-  }
-  .node::before, .node::after { content: ""; position: absolute; width: 12px; height: 12px; border: 2px solid rgba(212,230,255,.8); }
-  .node::before { top: -5px; left: -5px; border-right: 0; border-bottom: 0; }
-  .node::after { bottom: -5px; right: -5px; border-left: 0; border-top: 0; }
-  .node svg { width: 38px; height: 38px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
-  .node .tagc { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
-  .node .nlv { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-family: "Share Tech Mono", monospace; font-size: 13px; padding: 0 7px; background: var(--print); border: 1px solid rgba(160,200,255,.45); color: var(--print-text); white-space: nowrap; }
-  .node .nname { position: absolute; top: 94px; left: 50%; transform: translateX(-50%); font-family: "Share Tech Mono", monospace; font-size: 13px; color: rgba(212,230,255,.6); white-space: nowrap; letter-spacing: .03em; background: var(--print); padding: 1px 5px; }
-  .node.can { border-color: #e6f1ff; color: #f4f9ff; box-shadow: 0 0 22px rgba(160,210,255,.35); }
-  .node.can .nname { color: #f4f9ff; }
-  .node.max { background: rgba(20,70,80,.95); border-color: var(--teal); color: var(--teal); }
-  .node.ghost { border-style: dashed; color: rgba(212,230,255,.35); cursor: help; }
-  .node.ghost::before, .node.ghost::after { border-color: rgba(212,230,255,.25); }
-  .node.ghost .q { font-family: "Saira Stencil One", sans-serif; font-size: 30px; }
-  .node:hover:not(.ghost) { transform: scale(1.06); }
-  .node.pop { animation: pop .28s ease; }
-  @keyframes pop { 40% { transform: scale(1.18); } }
+  .cols { position: absolute; inset: 22px 32px 22px 32px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+  .col { --c: var(--teal); display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .col header { padding-bottom: 8px; border-bottom: 3px solid var(--c); }
+  .col h3 { font-family: "Saira Stencil One", sans-serif; font-size: 24px; color: #f4efe2; line-height: 1; }
+  .col header p { font-size: 14px; color: var(--mist); margin-top: 4px; }
+  .part { border: 1.5px solid rgba(160,200,255,.35); border-radius: 4px; background: rgba(4,16,32,.88); padding: 10px 12px; display: flex; flex-direction: column; gap: 5px; }
+  .part .top { display: flex; align-items: center; gap: 8px; }
+  .part svg { flex: none; width: 22px; height: 22px; fill: none; stroke: var(--c); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .part .nm { font-size: 17px; font-weight: 700; color: #f4efe2; flex: 1; min-width: 0; }
+  .pips { display: flex; gap: 2px; flex: none; }
+  .pips i { width: 6px; height: 10px; background: rgba(160,200,255,.18); }
+  .pips i.on { background: var(--c); }
+  .part .what { font-size: 14px; color: #a9c3dc; line-height: 1.3; }
+  .part .row2 { display: flex; align-items: center; gap: 10px; margin-top: 2px; }
+  .part .val { flex: 1; min-width: 0; font-family: "Share Tech Mono", monospace; font-size: 14px; color: var(--print-text); }
+  .part .val b { color: var(--c); font-weight: 400; }
+  .part .buy { flex: none; font-family: "Share Tech Mono", monospace; font-size: 15px; font-weight: 700; padding: 7px 12px; border: 0; border-radius: 3px; background: var(--gold); color: #241a04; white-space: nowrap; }
+  .part .buy:hover { filter: brightness(1.08); }
+  .part .buy:disabled { background: rgba(160,200,255,.12); color: var(--mist); cursor: default; filter: none; }
+  .part.maxed { border-color: var(--c); }
+  .part.locked { border-style: dashed; background: rgba(4,16,32,.55); }
+  .part.locked .nm, .part.locked .what { color: rgba(169,195,220,.5); }
+  .part.locked svg { stroke: rgba(169,195,220,.4); }
+  .part .lock { font-family: "Share Tech Mono", monospace; font-size: 13px; color: var(--mist); }
+  .part.pop { animation: pop .3s ease; }
+  @keyframes pop { 40% { transform: scale(1.04); } }
   .cat-drill { --c: var(--teal); } .cat-air { --c: var(--bubble); } .cat-coin { --c: var(--gold); } .cat-ability { --c: var(--violet); }
-  .legend { position: absolute; right: 40px; bottom: 28px; display: flex; gap: 18px; font-family: "Share Tech Mono", monospace; font-size: 14px; color: var(--mist); }
-  .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; }
-  .hintline { position: absolute; left: 40px; bottom: 28px; font-family: "Share Tech Mono", monospace; font-size: 14px; color: var(--mist); }
 
   #logbook { overflow-y: auto; padding: 30px 40px 40px; box-sizing: border-box; }
   #logbook h3 { font-family: "Share Tech Mono", monospace; font-size: 15px; letter-spacing: .16em; color: var(--mist); margin: 0 0 14px; }
@@ -175,7 +171,7 @@
   #win ul { margin: 6px 0 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; font-size: 18px; }
   #win h3 { font-family: "Share Tech Mono", monospace; font-size: 15px; letter-spacing: .14em; color: var(--mist); }
 
-  @media (prefers-reduced-motion: reduce) { .node, .launch { transition: none; } .node.pop { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .launch { transition: none; } .part.pop { animation: none; } }
 </style>
 
 <div id="viewport">
@@ -207,7 +203,7 @@
           <div><dt>Deepest ever</dt><dd id="rBest">0 m</dd></div>
         </dl>
         <div class="funds"><span>FUNDS</span><strong id="funds">0</strong></div>
-        <div id="spec"></div>
+        <div id="subStats"></div>
         <div class="bottom">
           <p id="startLine"></p>
           <button class="launch" id="btnDive">Launch</button>
@@ -221,17 +217,7 @@
         <button class="tab on" id="tabWorkshop">Workshop</button>
         <button class="tab" id="tabLogbook">Logbook<span class="n" id="logCount"></span></button>
       </nav>
-      <div class="pane" id="workshop">
-        <svg id="lines" aria-hidden="true"></svg>
-        <div id="nodes"></div>
-        <p class="hintline">Click a part to fit it. Fitting one reveals what connects to it.</p>
-        <div class="legend">
-          <span><i style="background:var(--teal)"></i>Drill</span>
-          <span><i style="background:var(--bubble)"></i>Oxygen</span>
-          <span><i style="background:var(--gold)"></i>Salvage</span>
-          <span><i style="background:var(--violet)"></i>Systems</span>
-        </div>
-      </div>
+      <div class="pane" id="workshop"><div class="cols" id="cols"></div></div>
       <div class="pane" id="logbook" hidden>
         <h3>SPECIMENS</h3>
         <div class="specimens" id="specimens"></div>
@@ -371,10 +357,16 @@
       ac = ac || new (window.AudioContext || window.webkitAudioContext)();
       if (ac.state === 'suspended') ac.resume();
       if (!hum) {
+        // drill motor: a low sawtooth, plus filtered noise for the grinding
         const o = ac.createOscillator(), g = ac.createGain(), f = ac.createBiquadFilter();
-        o.type = 'sawtooth'; o.frequency.value = 70; f.type = 'lowpass'; f.frequency.value = 400; g.gain.value = 0;
+        o.type = 'sawtooth'; o.frequency.value = 55; f.type = 'lowpass'; f.frequency.value = 320; g.gain.value = 0;
         o.connect(f).connect(g).connect(ac.destination); o.start();
-        hum = { o, g };
+        const buf = ac.createBuffer(1, ac.sampleRate, ac.sampleRate), data = buf.getChannelData(0);
+        for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+        const nz = ac.createBufferSource(), bp = ac.createBiquadFilter(), ng = ac.createGain();
+        nz.buffer = buf; nz.loop = true; bp.type = 'bandpass'; bp.frequency.value = 600; bp.Q.value = .9; ng.gain.value = 0;
+        nz.connect(bp).connect(ng).connect(ac.destination); nz.start();
+        hum = { o, g, bp, ng };
       }
     } catch (e) {}
   }
@@ -399,9 +391,11 @@
   }
   function setHum(level) {
     if (!hum || !ac) return;
-    const t = ac.currentTime;
-    hum.g.gain.setTargetAtTime(muted ? 0 : level * .035, t, .05);
-    hum.o.frequency.setTargetAtTime(60 + level * 50, t, .05);
+    const t = ac.currentTime, on = !muted && mode === 'dive' && !paused;
+    hum.g.gain.setTargetAtTime(on ? .014 + level * .03 : 0, t, .05);
+    hum.o.frequency.setTargetAtTime(55 + level * 35 + (on ? Math.random() * level * 12 : 0), t, .03);
+    hum.ng.gain.setTargetAtTime(on ? level * .09 : 0, t, .04);
+    hum.bp.frequency.setTargetAtTime(420 + level * 500 + Math.random() * level * 300, t, .03);
   }
   function toggleSound() { muted = !muted; $('btnSound1').textContent = $('btnSound2').textContent = muted ? 'Sound off' : 'Sound on'; setHum(0); }
 
@@ -414,15 +408,28 @@
   let parts = [], floats = [], rings = [], lights = [], shake = 0, T = 0;
   const snow = Array.from({ length: 140 }, () => ({ x: Math.random(), y: Math.random(), z: .25 + Math.random() * .75 }));
   const HR = 44; // hull radius
-  const sub = { x: SW / 2, y: 330, tilt: 0, spin: 0, grind: 0 };
+  const sub = { x: SW / 2, y: 330, tilt: 0, spin: 0, grind: 0, heat: 0 };
   let radioQ = [], radioCur = null, farBeast = null, farT = 6;
 
-  const drillLen = () => 34 + st.radius * .62;
-  const drillHalf = () => 11 + st.radius * .2;
-  const tipOffset = () => HR * .62 + 8 + drillLen();
+  // Wider Bit makes the drill head physically bigger; the head is what cuts.
+  const drillLen = () => 56 + st.radius * .9;
+  const drillHalf = () => 15 + st.radius * .34;
+  const drillBase = () => HR * .62 + 22;
+  const tipOffset = () => drillBase() + drillLen();
   function tipPos() {
     const d = tipOffset();
     return { x: sub.x - Math.sin(sub.tilt) * d, y: sub.y + Math.cos(sub.tilt) * d };
+  }
+  // the cutting part of the head: from a quarter of the way down to the tip
+  function drillSeg() {
+    const a = drillBase() + drillLen() * .2, b = tipOffset(), sn = Math.sin(sub.tilt), cs = Math.cos(sub.tilt);
+    return { ax: sub.x - sn * a, ay: sub.y + cs * a, bx: sub.x - sn * b, by: sub.y + cs * b };
+  }
+  function segHit(px, py, g) {
+    const dx = g.bx - g.ax, dy = g.by - g.ay;
+    const t = Math.max(0, Math.min(1, ((px - g.ax) * dx + (py - g.ay) * dy) / (dx * dx + dy * dy)));
+    const cx = g.ax + dx * t, cy = g.ay + dy * t;
+    return { d: Math.hypot(px - cx, py - cy), t, cx, cy, w: drillHalf() * (1 - t * .75) };
   }
 
   function pickType(d) {
@@ -471,6 +478,22 @@
   function radio(key) {
     if (!RADIO[key] || S.heard.includes(key)) return;
     S.heard.push(key); radioQ.push(RADIO[key]);
+  }
+
+  // chips, dust and sparks thrown off the flutes while cutting
+  function grindFx(x, y, ux, uy, n, dt) {
+    const col = n.type === 'crystal' ? C.gold : n.type === 'vent' ? '#ff8a3c' : n.type === 'iron' ? '#9aa6b2'
+      : n.type === 'viper' ? '#c7d3e0' : n.type === 'isopod' ? '#d9d0e6' : n.type === 'boss' ? '#ffffff' : css(shade(palette(run.depth).rock, .15));
+    const side = Math.random() < .5 ? -1 : 1;
+    if (Math.random() < dt * 45) {
+      const sp = 140 + Math.random() * 200;
+      parts.push({ x, y, vx: (ux * .6 - uy * side) * sp, vy: (uy * .6 + ux * side) * sp - 60, t: 0, life: .35 + Math.random() * .3, color: col, size: 2.5 + Math.random() * 3.5, rot: Math.random() * 6 });
+    }
+    if (Math.random() < dt * 28) {
+      const sp = 260 + Math.random() * 260;
+      parts.push({ x, y, vx: -uy * side * sp, vy: ux * side * sp - 120, t: 0, life: .18 + Math.random() * .15, color: Math.random() < .6 ? '#ffe7a8' : '#ffffff', size: 1.6, rot: 0 });
+    }
+    if (Math.random() < dt * 10) parts.push({ x, y, vx: (Math.random() - .5) * 60, vy: -20 - Math.random() * 30, t: 0, life: .8 + Math.random() * .5, color: 'rgba(170,175,180,.25)', size: 10 + Math.random() * 10, rot: 0, dust: 1 });
   }
 
   function hurt(n, amount) {
@@ -618,7 +641,6 @@
     mode = 'base';
     $('startLine').innerHTML = 'WINCH DROP · <b>' + startDepth() + ' m</b> · ' + B.zoneAt(startDepth()).name.toUpperCase();
     renderTree();
-    showSpec(specId ? byId(specId) : null);
     const known = Object.keys(KINDS).filter(t => S.seen[t]).length;
     $('logCount').textContent = known + '/' + Object.keys(KINDS).length;
     show('base');
@@ -645,55 +667,48 @@
     lucky: '<path d="M16 4l3.5 7.5 8 1-6 5.5 1.6 8L16 22l-7.1 4 1.6-8-6-5.5 8-1z"/>',
     gold2: '<circle cx="16" cy="12" r="7"/><path d="M16 21v8M12 25l4 4 4-4"/>',
   };
-  const TX = 580, TY = 400, DX = 132, DY = 118;
   const byId = id => B.upgrades.find(u => u.id === id);
   const revealed = u => !u.req || lvOf(u.req[0]) >= u.req[1];
-  const visible = u => revealed(u) || revealed(byId(u.req[0]));
-  const pos = u => [TX + u.col * DX, TY + u.row * DY];
-  let specId = 'dmg', tab = 'workshop';
+  let tab = 'workshop';
+  // Workshop columns, in the order parts unlock
+  const GROUPS = [
+    { cat: 'drill',   title: 'Drill',   what: 'Break rock faster',      ids: ['dmg', 'size', 'bit2', 'dmg2', 'bit3'] },
+    { cat: 'air',     title: 'Oxygen',  what: 'Longer, deeper dives',   ids: ['air', 'fins', 'bubble', 'suit', 'tank2'] },
+    { cat: 'coin',    title: 'Salvage', what: 'More money per dive',    ids: ['value', 'crystal', 'lucky', 'gold2'] },
+    { cat: 'ability', title: 'Systems', what: 'Automatic helpers',      ids: ['shock', 'sonar', 'drone'] },
+  ];
 
   function renderTree() {
     $('funds').textContent = fmt(S.coins);
     const focused = document.activeElement && document.activeElement.id;
-    let lines = '';
-    for (const u of B.upgrades) {
-      if (!u.req || !visible(u)) continue;
-      const [x1, y1] = pos(byId(u.req[0])), [x2, y2] = pos(u), on = revealed(u);
-      lines += '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="' + (on ? 'rgba(160,200,255,.6)' : 'rgba(160,200,255,.22)') + '" stroke-width="9"' + (on ? '' : ' stroke-dasharray="8 8"') + '/>' +
-               '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="#0a2340" stroke-width="4"/>';
-    }
-    $('lines').innerHTML = lines;
-    const box = $('nodes');
-    box.innerHTML = '';
-    for (const u of B.upgrades) {
-      if (!visible(u)) continue;
-      const [x, y] = pos(u), l = lvOf(u.id), on = revealed(u), maxed = l >= u.max, can = on && !maxed && S.coins >= B.cost(u, l);
-      const b = document.createElement('button');
-      b.id = 'node-' + u.id;
-      b.className = 'node cat-' + u.cat + (on ? '' : ' ghost') + (can ? ' can' : '') + (maxed ? ' max' : '');
-      b.style.left = x + 'px'; b.style.top = y + 'px';
-      b.setAttribute('aria-label', on ? u.name + ', level ' + l + ' of ' + u.max : 'Locked part');
-      b.innerHTML = on
-        ? '<i class="tagc"></i><svg viewBox="0 0 32 32">' + ICONS[u.id] + '</svg><span class="nlv">' + (maxed ? 'MAX' : l + '/' + u.max) + '</span><span class="nname">' + u.name + '</span>'
-        : '<span class="q">?</span>';
-      b.addEventListener('mouseenter', () => showSpec(u));
-      b.addEventListener('focus', () => showSpec(u));
-      b.addEventListener('click', () => buy(u));
-      box.appendChild(b);
-    }
+    const box = $('cols');
+    box.innerHTML = GROUPS.map(g => '<section class="col cat-' + g.cat + '"><header><h3>' + g.title + '</h3><p>' + g.what + '</p></header>' +
+      g.ids.map(id => {
+        const u = byId(id), l = lvOf(id), on = revealed(u), maxed = l >= u.max, c = B.cost(u, l);
+        const pips = u.max > 1 ? '<span class="pips">' + Array.from({ length: u.max }, (_, i) => '<i' + (i < l ? ' class="on"' : '') + '></i>').join('') + '</span>' : '';
+        const icon = '<svg viewBox="0 0 32 32" aria-hidden="true">' + ICONS[id] + '</svg>';
+        if (!on) return '<div class="part locked">' + '<div class="top">' + icon + '<span class="nm">' + u.name + '</span></div>' +
+          '<p class="what">' + u.desc + '</p><p class="lock">Locked · needs ' + byId(u.req[0]).name + ' level ' + u.req[1] + '</p></div>';
+        const val = maxed ? B.effect[id](l) : B.effect[id](l) + ' → <b>' + B.effect[id](l + 1) + '</b>';
+        const btn = maxed ? '<button class="buy" disabled>Maxed</button>'
+          : '<button class="buy" id="buy-' + id + '"' + (S.coins < c ? ' disabled' : '') + '><i class="coin"></i>' + fmt(c) + '</button>';
+        return '<div class="part' + (maxed ? ' maxed' : '') + '" id="part-' + id + '"><div class="top">' + icon + '<span class="nm">' + u.name + '</span>' + pips + '</div>' +
+          '<p class="what">' + u.desc + '</p><div class="row2"><span class="val">' + val + '</span>' + btn + '</div></div>';
+      }).join('') + '</section>').join('');
+    box.querySelectorAll('.buy[id]').forEach(b => b.addEventListener('click', () => buy(byId(b.id.slice(4)))));
     if (focused && $(focused)) $(focused).focus({ preventScroll: true });
+    renderSubStats();
   }
-  function showSpec(u) {
-    const el = $('spec');
-    if (!u || !visible(u)) { el.innerHTML = '<div class="sname">Workshop</div><p class="sdesc">Point at a part to read its spec sheet.</p>'; return; }
-    specId = u.id;
-    if (!revealed(u)) { el.innerHTML = '<div class="sname">Classified</div><p class="sdesc">Reach level ' + u.req[1] + ' on ' + byId(u.req[0]).name + ' to unlock this blueprint.</p>'; return; }
-    const l = lvOf(u.id), maxed = l >= u.max, c = B.cost(u, l);
-    const eff = maxed ? B.effect[u.id](l) : B.effect[u.id](l) + ' → <b>' + B.effect[u.id](l + 1) + '</b>';
-    const cost = maxed ? '<p class="scost no">Fully fitted</p>'
-      : S.coins >= c ? '<p class="scost"><i class="coin"></i>' + fmt(c) + ' · click to fit</p>'
-      : '<p class="scost no"><i class="coin"></i>' + fmt(c) + ' · need ' + fmt(c - S.coins) + ' more</p>';
-    el.innerHTML = '<div class="sname">' + u.name + ' <span class="slv">' + l + '/' + u.max + '</span></div><p class="sdesc">' + u.desc + '</p><p class="seff">' + eff + '</p>' + cost;
+  function renderSubStats() {
+    const s2 = B.stats(S.lv);
+    const rows = [
+      ['Drill', fmt(s2.dps) + ' dmg/s'],
+      ['Drill bit', s2.radius + ' px'],
+      ['Oxygen', s2.air + ' s'],
+      ['Sink speed', s2.fins.toFixed(2) + ' m/s'],
+      ['Coin bonus', '×' + s2.coinMult.toFixed(2)],
+    ];
+    $('subStats').innerHTML = rows.map(([a, b]) => '<div><span>' + a + '</span><b>' + b + '</b></div>').join('');
   }
   function buy(u) {
     unlockAudio();
@@ -703,8 +718,8 @@
     const c = B.cost(u, l);
     if (S.coins < c) { sfx('no'); return; }
     S.coins -= c; S.lv[u.id] = l + 1; st = B.stats(S.lv);
-    sfx('buy'); save(); renderTree(); showSpec(u);
-    const n = $('node-' + u.id);
+    sfx('buy'); save(); renderTree();
+    const n = $('part-' + u.id);
     if (n) { n.classList.remove('pop'); void n.offsetWidth; n.classList.add('pop'); }
   }
 
@@ -819,7 +834,7 @@
     // the sub follows the pointer so the drill tip goes where you aim
     const tx = Math.max(110, Math.min(SW - 110, ptr.x)), ty = Math.max(110, Math.min(SH - 200, ptr.y - tipOffset()));
     const oldx = sub.x;
-    const ease = Math.min(1, dt * (R.intro > 0 ? 3 : 9));
+    const ease = Math.min(1, dt * (R.intro > 0 ? 3 : 14));
     sub.x += (tx - sub.x) * ease; sub.y += (ty - sub.y) * ease;
     const vx = (sub.x - oldx) / Math.max(dt, 1e-3);
     sub.tilt += (Math.max(-.38, Math.min(.38, vx * .0011)) - sub.tilt) * Math.min(1, dt * 6);
@@ -849,7 +864,7 @@
       const n = makeNode(R.depth, null, !!R.boss);
       if (!(R.boss && n.type === 'jelly')) R.nodes.push(n);
     }
-    const tip = tipPos(), rad = st.radius, dps = st.dps;
+    const tip = tipPos(), seg = drillSeg(), dps = st.dps;
     let grinding = 0;
     for (const n of R.nodes) {
       n.y += n.vy * dt; n.x += n.vx * dt; n.rot += n.vr * dt; n.ph += dt * 3; n.hit = Math.max(0, n.hit - dt);
@@ -857,16 +872,17 @@
       if (n.dead) continue;
       if (!S.seen[n.type] && n.y < SH - 60) { S.seen[n.type] = true; n.isNew = 4; radio('first_' + n.type); }
       if (n.isNew) n.isNew = Math.max(0, n.isNew - dt);
-      const touchTip = Math.hypot(n.x - tip.x, n.y - tip.y) < rad + n.s * .8;
+      const hit = segHit(n.x, n.y, seg);
+      const touchTip = hit.d < hit.w + n.s * .8 + 4;
       const touchHull = Math.hypot(n.x - sub.x, n.y - sub.y) < HR + n.s * .8;
       if (n.type === 'jelly') { if (touchTip || touchHull) sting(n); continue; }
       if (n.type === 'bubble') { if (touchTip || touchHull) breakNode(n); continue; }
       if (touchTip) {
         hurt(n, dps * dt); grinding = 1;
-        if (Math.random() < dt * 30) {
-          const cx = (n.x + tip.x) / 2, cy = (n.y + tip.y) / 2;
-          parts.push({ x: cx, y: cy, vx: (Math.random() - .5) * 300, vy: -Math.random() * 200, t: 0, life: .25 + Math.random() * .2, color: Math.random() < .5 ? '#ffe7a8' : '#ffffff', size: 2, rot: 0 });
-        }
+        // the drill bites: the target is shoved off the flutes and shakes
+        const ux = (n.x - hit.cx) / (hit.d || 1), uy = (n.y - hit.cy) / (hit.d || 1);
+        n.x += ux * 14 * dt; n.y += uy * 14 * dt; n.shake = .1;
+        grindFx(hit.cx + ux * hit.w, hit.cy + uy * hit.w, ux, uy, n, dt);
       }
     }
     if (st.sonar > 0) {
@@ -917,17 +933,20 @@
           R.nodes.push(j);
         }
       }
-      if (Math.hypot(b.x - tip.x, b.y - tip.y) < rad + def.r * .85) {
+      const bh = segHit(b.x, b.y, seg);
+      if (bh.d < def.r * .85 + bh.w * .5) {
         if (b.open) {
           b.hp -= dps * dt; b.hit = .07; grinding = 1;
-          if (Math.random() < dt * 30) parts.push({ x: tip.x, y: tip.y, vx: (Math.random() - .5) * 320, vy: -Math.random() * 220, t: 0, life: .3, color: '#ffffff', size: 2.5, rot: 0 });
+          const ux = (b.x - bh.cx) / (bh.d || 1), uy = (b.y - bh.cy) / (bh.d || 1);
+          grindFx(tip.x, tip.y, ux, uy, { type: 'boss' }, dt);
         } else if (b.blockT <= 0) { b.blockT = .9; float(tip.x, tip.y - 30, 'BLOCKED', C.mist, 20); sfx('block'); burst(tip.x, tip.y, '#9aa6b2', 6, 100, 2); }
       }
       if (b.hp <= 0) { bossDown(); return; }
     }
-    sub.grind += (grinding - sub.grind) * Math.min(1, dt * 10);
-    sub.spin += dt * (1.2 + sub.grind * 5);
-    if (sub.grind > .5) addShake(1.2);
+    sub.grind += (grinding - sub.grind) * Math.min(1, dt * 12);
+    sub.heat = Math.max(0, Math.min(1, sub.heat + (grinding ? dt * .7 : -dt * .5)));
+    sub.spin += dt * (1.6 + sub.grind * 4.5);
+    if (sub.grind > .5) addShake(1.6);
     setHum(sub.grind);
     if (R.air <= 0) {
       R.air = 0;
@@ -1332,24 +1351,55 @@
   }
 
   // ---------- the sub ----------
+  function drawDrill(hl) {
+    const len = drillLen(), hw = drillHalf(), y0 = hl * .62, yb = drillBase(), tipY = yb + len;
+    const mat = lvOf('bit3') ? ['#12505c', '#8ff0ff', '#e6fdff', '#bff8ff'] : lvOf('bit2') ? ['#1c1f23', '#5d656d', '#aab3bb', '#d9a441'] : ['#3b434a', '#9aa5ae', '#e9eef2', '#c8ced3'];
+    X.save();
+    if (sub.grind > .1) X.translate((Math.random() - .5) * 2.4 * sub.grind, (Math.random() - .5) * 2.4 * sub.grind);
+    // gearbox housing under the hull
+    X.fillStyle = '#23292e'; X.fillRect(-hw - 9, y0 - 6, 2 * hw + 18, yb - y0 + 4);
+    X.fillStyle = '#3c454c'; X.fillRect(-hw - 9, y0 - 6, 2 * hw + 18, 5);
+    X.fillStyle = '#8a949c'; for (const bx of [-hw - 4, hw + 4]) { X.beginPath(); X.arc(bx, y0 + 4, 2.4, 0, 6.28); X.fill(); }
+    X.fillStyle = '#15191c'; X.fillRect(-hw * .6, yb - 5, hw * 1.2, 7);
+    // auger head
+    const head = () => { X.beginPath(); X.moveTo(-hw, yb); X.lineTo(hw, yb); X.quadraticCurveTo(hw * .92, yb + len * .55, 0, tipY); X.quadraticCurveTo(-hw * .92, yb + len * .55, -hw, yb); X.closePath(); };
+    head();
+    const g = X.createLinearGradient(-hw, 0, hw, 0);
+    g.addColorStop(0, mat[0]); g.addColorStop(.3, mat[1]); g.addColorStop(.42, mat[2]); g.addColorStop(.62, mat[1]); g.addColorStop(1, mat[0]);
+    X.fillStyle = g; X.fill();
+    X.save(); head(); X.clip();
+    // helical flutes scrolling down as it spins
+    const N = 6;
+    for (let i = 0; i < N; i++) {
+      const f = ((i / N) + sub.spin) % 1, y = yb + f * len, w = hw * Math.pow(1 - f, .8) + 2, tw = w * .55;
+      X.strokeStyle = 'rgba(0,0,0,.55)'; X.lineWidth = 6 * (1 - f * .6);
+      X.beginPath(); X.moveTo(-w - 2, y + tw); X.quadraticCurveTo(0, y + tw * .1, w + 2, y - tw); X.stroke();
+      X.strokeStyle = mat[3]; X.globalAlpha = .7; X.lineWidth = 1.5;
+      X.beginPath(); X.moveTo(-w - 2, y + tw + 4); X.quadraticCurveTo(0, y + tw * .1 + 4, w + 2, y - tw + 4); X.stroke();
+      X.globalAlpha = 1;
+    }
+    // heat from grinding creeps up from the tip
+    if (sub.heat > .02) {
+      const hg = X.createLinearGradient(0, yb + len * .35, 0, tipY);
+      hg.addColorStop(0, 'rgba(255,110,30,0)'); hg.addColorStop(1, 'rgba(255,140,50,' + (sub.heat * .85) + ')');
+      X.fillStyle = hg; X.fillRect(-hw, yb, 2 * hw, len);
+    }
+    X.restore();
+    head(); X.strokeStyle = 'rgba(0,0,0,.6)'; X.lineWidth = 1.5; X.stroke();
+    // hardened tip cap
+    X.fillStyle = sub.heat > .5 ? '#ffd7a0' : mat[3];
+    X.beginPath(); X.moveTo(-hw * .22, tipY - len * .16); X.lineTo(hw * .22, tipY - len * .16); X.lineTo(0, tipY + 2); X.closePath(); X.fill();
+    if (sub.grind > .1) {
+      X.fillStyle = 'rgba(255,236,190,' + sub.grind * .9 + ')';
+      X.beginPath(); X.arc(0, tipY, 5 + Math.random() * 4, 0, 6.28); X.fill();
+    }
+    X.restore();
+  }
+
   function drawSub() {
     const hl = HR;
     X.save(); X.translate(sub.x, sub.y); X.rotate(sub.tilt);
-    const len = drillLen(), hw = drillHalf(), y0 = hl * .62;
-    const mat = lvOf('bit3') ? ['#1d5f6b', '#a8f6ff', '#e6fdff'] : lvOf('bit2') ? ['#262a2f', '#707880', '#b9c2ca'] : ['#4b545c', '#b7c1c9', '#eef3f6'];
-    X.fillStyle = '#2f363c'; X.fillRect(-hw - 6, y0 - 2, 2 * hw + 12, 12);
-    X.beginPath(); X.moveTo(-hw, y0 + 8); X.lineTo(hw, y0 + 8); X.lineTo(0, y0 + 8 + len); X.closePath();
-    const g = X.createLinearGradient(-hw, 0, hw, 0);
-    g.addColorStop(0, mat[0]); g.addColorStop(.45, mat[2]); g.addColorStop(.6, mat[1]); g.addColorStop(1, mat[0]);
-    X.fillStyle = g; X.fill();
-    X.save(); X.clip();
-    X.strokeStyle = 'rgba(0,0,0,.4)'; X.lineWidth = 3.5;
-    for (let i = 0; i < 7; i++) {
-      const f = ((i / 7) + sub.spin) % 1, yy = y0 + 8 + f * len, w = hw * (1 - f);
-      X.beginPath(); X.moveTo(-w - 2, yy + 6); X.lineTo(w + 2, yy - 6); X.stroke();
-    }
-    X.restore();
-    if (sub.grind > .1) { X.fillStyle = 'rgba(255,230,170,' + (sub.grind * .8) + ')'; X.beginPath(); X.arc(0, y0 + 8 + len, 6, 0, 6.28); X.fill(); }
+    drawDrill(hl);
     for (const side of [-1, 1]) {
       X.save(); X.translate(side * (hl + 4), 8);
       X.fillStyle = '#39434b'; X.fillRect(-9, -13, 18, 26);
@@ -1417,7 +1467,7 @@
     }
     cut(sub.x, sub.y, 190, .85);
     const tp = tipPos();
-    if (sub.grind > .1) cut(tp.x, tp.y, 120, .8 * sub.grind);
+    if (sub.grind > .1 || sub.heat > .05) cut(tp.x, tp.y, 110 + sub.heat * 70, Math.min(.9, .6 * sub.grind + .4 * sub.heat));
     for (const l of lights) cut(l.x, l.y, l.r, l.life ? l.a * (1 - l.t / l.life) : l.a);
     X.save(); X.setTransform(1, 0, 0, 1, 0, 0); X.drawImage(shadeCv, 0, 0); X.restore();
     X.save(); X.globalCompositeOperation = 'lighter';
@@ -1499,15 +1549,22 @@
       X.beginPath(); X.moveTo(SHIP_TITLE_X + 420, top); X.lineTo(sub.x, sub.y - HR - 10); X.stroke();
     }
     if (mode === 'dive') {
-      for (const n of run.nodes) drawThing(n, pal);
+      for (const n of run.nodes) {
+        if (n.shake > 0) {
+          n.shake -= 1 / 60;
+          const ox = (Math.random() - .5) * 4, oy = (Math.random() - .5) * 4;
+          n.x += ox; n.y += oy; drawThing(n, pal); n.x -= ox; n.y -= oy;
+        } else drawThing(n, pal);
+      }
       if (run.boss) drawBoss(run.boss);
       if (st.drone > 0) drawDrone(run.drone);
     }
     drawSub();
     if (mode === 'dive') {
-      const tp = tipPos();
-      X.strokeStyle = 'rgba(255,236,190,' + (.12 + sub.grind * .2) + ')'; X.setLineDash([6, 8]); X.lineDashOffset = -T * 40; X.lineWidth = 1.5;
-      X.beginPath(); X.arc(tp.x, tp.y, st.radius, 0, 6.28); X.stroke(); X.setLineDash([]);
+      // small aim mark where the drill tip is heading
+      X.strokeStyle = 'rgba(255,236,190,.35)'; X.lineWidth = 1.5;
+      X.beginPath(); X.moveTo(ptr.x - 9, ptr.y); X.lineTo(ptr.x - 4, ptr.y); X.moveTo(ptr.x + 4, ptr.y); X.lineTo(ptr.x + 9, ptr.y);
+      X.moveTo(ptr.x, ptr.y - 9); X.lineTo(ptr.x, ptr.y - 4); X.moveTo(ptr.x, ptr.y + 4); X.lineTo(ptr.x, ptr.y + 9); X.stroke();
     }
     for (const r of rings) {
       const t = r.t / r.life;
@@ -1517,6 +1574,7 @@
     X.globalAlpha = 1;
     for (const p of parts) {
       X.globalAlpha = 1 - p.t / p.life; X.fillStyle = p.color;
+      if (p.dust) { X.beginPath(); X.arc(p.x, p.y, p.size * (1 + p.t), 0, 6.28); X.fill(); continue; }
       X.save(); X.translate(p.x, p.y); X.rotate(p.rot + p.t * 4); X.fillRect(-p.size / 2, -p.size / 2, p.size, p.size); X.restore();
     }
     X.globalAlpha = 1;
