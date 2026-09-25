@@ -1,4 +1,4 @@
-// Deepline full-game upgrade tree (design data).
+// Trenchbore full-game upgrade tree (design data).
 // Drawn by docs/plan/index.html and meant to be loaded by the finished game.
 //
 // Every node: id, name, branch, parent, max level, currency, effect per level,
@@ -39,7 +39,8 @@
     N('drill8', 'Resonance', 'drill', 'drill7', 5, 'cr', 'Damage ramps up the longer you hold one target'),
     N('drill9', 'Boss Breaker', 'drill', 'drill6', 5, 'cr', '+20% damage to bosses'),
     N('drill10', 'Drill Motor III', 'drill', 'head4', 10, 'pe', '+40% damage'),
-    N('drill11', 'Twin Drill', 'drill', 'head5', 1, 'pe', 'A second drill arm that cuts on its own'),
+    N('drill11', 'Second Arm', 'drill', 'head5', 1, 'pe', 'A second drill arm that cuts the nearest target by itself'),
+    N('drill13', 'Third Arm', 'drill', 'drill11', 1, 'pe', 'A third drill arm', 'Beat the Warden'),
     N('drill12', 'Hellfire Coating', 'drill', 'head6', 3, 'pe', 'Burning targets take damage over time'),
 
     // ---- Hull & Oxygen
