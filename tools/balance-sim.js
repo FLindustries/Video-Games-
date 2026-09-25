@@ -10,15 +10,19 @@ const B = require('../prototypes/deepline/balance.js');
 const verbose = process.argv.includes('--verbose');
 
 const SHOP_SECONDS = 6;   // time a player spends in the tree between dives
-const TRAVEL = 0.3;       // seconds moving the drill between rocks
+const TRAVEL = 0.35;      // seconds moving the drill between targets
 // Bubbles are B.bubbleShare of spawns; a player catches about 60% of them.
 const BUBBLES_CAUGHT = (1 / B.spawnEvery) * B.bubbleShare * 0.6;
 const BOSS_UPTIME = { clam: 0.6, angler: 0.75, eye: 0.65 };
 
 function typeMix(d, s) {
   const zi = B.zones.indexOf(B.zoneAt(d));
-  const mix = { crystal: s.crystalChance, iron: zi >= 1 ? 0.15 : 0, vent: zi >= 2 ? 0.12 : 0 };
-  mix.rock = 1 - mix.crystal - mix.iron - mix.vent;
+  const mix = {
+    crystal: d >= 8 ? s.crystalChance : 0,
+    iron: zi >= 1 ? 0.13 : 0, viper: zi >= 1 ? 0.10 : 0,
+    vent: zi >= 2 ? 0.10 : 0, isopod: zi >= 2 ? 0.08 : 0,
+  };
+  mix.rock = 1 - Object.values(mix).reduce((a, b) => a + b, 0);
   let hp = 0, coin = 0;
   for (const k in mix) { hp += mix[k] * B.types[k].hp; coin += mix[k] * B.types[k].coin; }
   return { hp: hp * B.rockHp(d), coin: coin * B.rockCoin(d) };

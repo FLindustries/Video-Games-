@@ -13,8 +13,10 @@
       crystal: { hp: 4, coin: 6 },
       iron:    { hp: 3, coin: 4 },
       vent:    { hp: 2, coin: 3 },
+      viper:   { hp: 2.5, coin: 3 },
+      isopod:  { hp: 5, coin: 6 },
     },
-    spawnEvery: 0.5,   // seconds between spawns in the shaft
+    spawnEvery: 0.32,  // seconds between spawns across the screen
     bubbleShare: 0.1,  // share of spawns that are air bubbles (air is capped at the tank size)
     jellyShare: 0.1,   // share of spawns that are jellyfish (below 5 m)
 
@@ -27,21 +29,21 @@
     // Upgrade tree. col/row place the node on the tree screen (root at 0,0).
     // req: [parentId, parentLevel] reveals the node.
     upgrades: [
-      { id: 'dmg',    name: 'Drill Power',    cat: 'drill',   col: 0,  row: 0,  req: null,           base: 5,    growth: 1.45, max: 10, desc: 'More damage per second.' },
-      { id: 'air',    name: 'Air Tank',       cat: 'air',     col: -1, row: 0,  req: ['dmg', 1],     base: 6,    growth: 1.5,  max: 10, desc: 'Stay down longer.' },
-      { id: 'size',   name: 'Drill Size',     cat: 'drill',   col: 1,  row: 0,  req: ['dmg', 1],     base: 8,    growth: 1.5,  max: 8,  desc: 'A wider drill hits more rocks at once.' },
+      { id: 'dmg',    name: 'Drill Motor',    cat: 'drill',   col: 0,  row: 0,  req: null,           base: 5,    growth: 1.45, max: 10, desc: 'More damage per second.' },
+      { id: 'air',    name: 'Oxygen Tank',    cat: 'air',     col: -1, row: 0,  req: ['dmg', 1],     base: 6,    growth: 1.5,  max: 10, desc: 'Stay down longer.' },
+      { id: 'size',   name: 'Wider Bit',      cat: 'drill',   col: 1,  row: 0,  req: ['dmg', 1],     base: 8,    growth: 1.5,  max: 8,  desc: 'A bigger drill bit grinds more at once.' },
       { id: 'value',  name: 'Salvage',        cat: 'coin',    col: 0,  row: 1,  req: ['dmg', 1],     base: 12,   growth: 1.55, max: 10, desc: 'More coins from every rock.' },
-      { id: 'fins',   name: 'Fins',           cat: 'air',     col: -2, row: 0,  req: ['air', 1],     base: 10,   growth: 1.55, max: 10, desc: 'Sink faster.' },
-      { id: 'bubble', name: 'Rebreather',     cat: 'air',     col: -1, row: -1, req: ['air', 2],     base: 20,   growth: 1.6,  max: 5,  desc: 'Bubbles give more air.' },
-      { id: 'suit',   name: 'Stingproof Suit', cat: 'air',    col: -2, row: -1, req: ['bubble', 1],  base: 30,   growth: 1.7,  max: 4,  desc: 'Jellyfish take less air.' },
-      { id: 'tank2',  name: 'Deep Tank',      cat: 'air',     col: -3, row: 0,  req: ['fins', 3],    base: 120,  growth: 1.7,  max: 5,  desc: 'A second tank. Much longer dives.' },
-      { id: 'shock',  name: 'Shockwave',      cat: 'ability', col: 2,  row: 0,  req: ['size', 2],    base: 40,   growth: 1.6,  max: 5,  desc: 'Breaking a rock damages rocks around it.' },
-      { id: 'sonar',  name: 'Sonar Pulse',    cat: 'ability', col: 2,  row: -1, req: ['shock', 1],   base: 150,  growth: 1.8,  max: 5,  desc: 'Every 4 s, damages every rock in the shaft.' },
-      { id: 'drone',  name: 'Drill Drone',    cat: 'ability', col: 3,  row: -1, req: ['sonar', 1],   base: 400,  growth: 1.8,  max: 5,  desc: 'A drone drills the nearest rock on its own.' },
+      { id: 'fins',   name: 'Ballast',        cat: 'air',     col: -2, row: 0,  req: ['air', 1],     base: 10,   growth: 1.55, max: 10, desc: 'Sink faster.' },
+      { id: 'bubble', name: 'Air Scrubber',   cat: 'air',     col: -1, row: -1, req: ['air', 2],     base: 20,   growth: 1.6,  max: 5,  desc: 'Air pockets give more oxygen.' },
+      { id: 'suit',   name: 'Hull Plating',   cat: 'air',    col: -2, row: -1, req: ['bubble', 1],  base: 30,   growth: 1.7,  max: 4,  desc: 'Jellyfish stings cost less oxygen.' },
+      { id: 'tank2',  name: 'Reserve Tank',   cat: 'air',     col: -3, row: 0,  req: ['fins', 3],    base: 120,  growth: 1.7,  max: 5,  desc: 'A second tank. Much longer dives.' },
+      { id: 'shock',  name: 'Shockwave',      cat: 'ability', col: 2,  row: 0,  req: ['size', 2],    base: 40,   growth: 1.6,  max: 5,  desc: 'Anything you break damages what is around it.' },
+      { id: 'sonar',  name: 'Sonar Pulse',    cat: 'ability', col: 2,  row: -1, req: ['shock', 1],   base: 150,  growth: 1.8,  max: 5,  desc: 'Every 4 s, damages everything on screen.' },
+      { id: 'drone',  name: 'ROV Drone',      cat: 'ability', col: 3,  row: -1, req: ['sonar', 1],   base: 400,  growth: 1.8,  max: 5,  desc: 'A small drone cuts the nearest target on its own.' },
       { id: 'bit2',   name: 'Tungsten Bit',   cat: 'drill',   col: 0,  row: -1, req: ['dmg', 5],     base: 250,  growth: 1,    max: 1,  desc: 'Doubles all drill damage.' },
-      { id: 'dmg2',   name: 'Drill Power II', cat: 'drill',   col: 0,  row: -2, req: ['bit2', 1],    base: 400,  growth: 1.55, max: 10, desc: '+25% drill damage per level.' },
+      { id: 'dmg2',   name: 'Drill Motor II', cat: 'drill',   col: 0,  row: -2, req: ['bit2', 1],    base: 400,  growth: 1.55, max: 10, desc: '+25% drill damage per level.' },
       { id: 'bit3',   name: 'Diamond Bit',    cat: 'drill',   col: 0,  row: -3, req: ['dmg2', 5],    base: 15000, growth: 1,    max: 1,  desc: 'Triples all drill damage.' },
-      { id: 'crystal', name: 'Prospector',    cat: 'coin',    col: 1,  row: 1,  req: ['value', 2],   base: 35,   growth: 1.6,  max: 5,  desc: 'Gold crystals show up more often.' },
+      { id: 'crystal', name: 'Ore Scanner',   cat: 'coin',    col: 1,  row: 1,  req: ['value', 2],   base: 35,   growth: 1.6,  max: 5,  desc: 'Gold ore shows up more often.' },
       { id: 'lucky',  name: 'Lucky Strike',   cat: 'coin',    col: 1,  row: 2,  req: ['crystal', 1], base: 80,   growth: 1.65, max: 5,  desc: 'Chance for a rock to pay 5×.' },
       { id: 'gold2',  name: 'Pressure Pay',   cat: 'coin',    col: 0,  row: 2,  req: ['value', 5],   base: 300,  growth: 1.8,  max: 5,  desc: 'Coins grow with depth: +1% per 10 m per level.' },
     ],
@@ -72,21 +74,21 @@
   // What one level of an upgrade means, for the tree's "now → next" line.
   B.effect = {
     dmg: l => `${B.base.dps + 4 * l} base dmg/s`,
-    air: l => `${B.base.air + 1.5 * l} s air`,
-    size: l => `${B.base.radius + 5 * l} px drill`,
+    air: l => `${B.base.air + 1.5 * l} s oxygen`,
+    size: l => `${B.base.radius + 5 * l} px bit`,
     value: l => `×${(1 + 0.25 * l).toFixed(2)} coins`,
     fins: l => `${(B.base.fins + 0.35 * l).toFixed(2)} m/s`,
-    bubble: l => `+${(B.base.bubble + 0.3 * l).toFixed(1)} s per bubble`,
+    bubble: l => `+${(B.base.bubble + 0.3 * l).toFixed(1)} s per air pocket`,
     suit: l => `−${(B.base.sting * (1 - 0.2 * l)).toFixed(1)} s per sting`,
-    tank2: l => `+${3 * l} s air`,
+    tank2: l => `+${3 * l} s oxygen`,
     shock: l => `${15 * l}% splash`,
     sonar: l => `${50 * l}% dmg pulse`,
     drone: l => `${20 * l}% dmg drone`,
     bit2: l => (l ? '×2 damage' : 'not installed'),
     dmg2: l => `+${25 * l}% damage`,
     bit3: l => (l ? '×3 damage' : 'not installed'),
-    crystal: l => `${8 + 3 * l}% crystals`,
-    lucky: l => `${4 * l}% lucky rocks`,
+    crystal: l => `${8 + 3 * l}% gold ore`,
+    lucky: l => `${4 * l}% lucky finds`,
     gold2: l => `+${l}% per 10 m`,
   };
 
