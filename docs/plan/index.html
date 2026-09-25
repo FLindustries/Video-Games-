@@ -1,0 +1,561 @@
+<title>Deepline Build Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Saira+Stencil+One&family=Share+Tech+Mono&display=swap">
+<style>
+  /* One deliberate look: the game's own blueprint. */
+  :root {
+    color-scheme: dark;
+    --bg: #081a30;
+    --panel: #0c2644;
+    --panel-2: #103057;
+    --line: rgba(140, 190, 255, .28);
+    --line-2: rgba(140, 190, 255, .5);
+    --ink: #d8e7fb;
+    --mute: #93b0cc;
+    --hull: #f0b429;
+    --teal: #3fe0c5;
+    --blue: #7fd8ff;
+    --gold: #f6c453;
+    --violet: #b18cff;
+    --green: #7be08a;
+    --red: #ff6b4a;
+    --coral: #ff7a59;
+  }
+  html { background: var(--bg); }
+  body {
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(rgba(140,190,255,.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(140,190,255,.07) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: var(--ink);
+    font: 16px/1.55 "Chakra Petch", ui-sans-serif, system-ui, sans-serif;
+    padding-inline: 20px;
+    padding-block: 0 80px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
+  h1 { font-family: "Saira Stencil One", sans-serif; font-size: clamp(44px, 8vw, 84px); line-height: .95; color: #f4efe2; }
+  h1 span { color: var(--hull); }
+  h2 { font-family: "Saira Stencil One", sans-serif; font-size: clamp(28px, 4vw, 38px); line-height: 1.05; color: #f4efe2; }
+  h3 { font-size: 18px; font-weight: 700; color: #f4efe2; }
+  p { margin: 0; max-width: 72ch; }
+  a { color: var(--blue); }
+  .mono { font-family: "Share Tech Mono", ui-monospace, monospace; }
+  .eyebrow { font-family: "Share Tech Mono", monospace; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); }
+
+  nav.toc {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+    display: flex; gap: 4px 18px; flex-wrap: wrap; padding: 12px 0;
+    background: rgba(8,26,48,.94); border-bottom: 1px solid var(--line);
+    font-family: "Share Tech Mono", monospace; font-size: 14px;
+  }
+  nav.toc a { color: var(--mute); text-decoration: none; }
+  nav.toc a:hover, nav.toc a:focus-visible { color: var(--hull); }
+
+  header.hero { padding-block: 48px 28px; display: grid; gap: 18px; }
+  .lede { font-size: 19px; color: #c5d8ee; max-width: 70ch; }
+  .spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 8px; }
+  .spec div { border: 1px solid var(--line-2); background: rgba(12,38,68,.8); padding: 12px 14px; }
+  .spec b { display: block; font-family: "Saira Stencil One", sans-serif; font-weight: 400; font-size: 30px; line-height: 1.05; color: var(--hull); }
+  .spec span { font-size: 14px; color: var(--mute); }
+
+  section { padding-block: 44px 8px; display: grid; gap: 18px; scroll-margin-top: 60px; }
+  .cols2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .box { border: 1px solid var(--line); background: rgba(12,38,68,.72); padding: 16px 18px; display: grid; gap: 8px; align-content: start; }
+  .box.warn { border-color: rgba(255,122,89,.6); }
+  .box.warn h3 { color: var(--coral); }
+  ul.clean { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+  ul.clean li::marker { color: var(--hull); }
+
+  .loop { display: flex; flex-wrap: wrap; gap: 8px; align-items: stretch; }
+  .loop div { flex: 1 1 160px; border: 1px solid var(--line-2); background: var(--panel); padding: 12px 14px; }
+  .loop b { font-family: "Share Tech Mono", monospace; color: var(--hull); font-weight: 400; display: block; font-size: 13px; letter-spacing: .1em; }
+
+  .scroll { overflow-x: auto; border: 1px solid var(--line); background: rgba(12,38,68,.72); }
+  table { border-collapse: collapse; width: 100%; min-width: 980px; font-size: 14.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  th { font-family: "Share Tech Mono", monospace; font-weight: 400; font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--mute); background: rgba(8,26,48,.6); }
+  td.z { font-family: "Saira Stencil One", sans-serif; font-size: 18px; color: #f4efe2; white-space: nowrap; }
+  td.d { font-family: "Share Tech Mono", monospace; white-space: nowrap; color: var(--blue); }
+  td.b { color: var(--coral); font-weight: 600; }
+  tr.act td { background: rgba(240,180,41,.08); font-family: "Share Tech Mono", monospace; color: var(--hull); letter-spacing: .1em; font-size: 12.5px; padding-block: 6px; }
+
+  /* ---- tree ---- */
+  .treebox { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
+  .treebox .svgwrap { border: 1px solid var(--line-2); background: rgba(6,20,38,.85); position: relative; }
+  .treebox svg { display: block; width: 100%; height: auto; }
+  .treebar { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px; border-bottom: 1px solid var(--line); }
+  .treebar button { font-family: "Share Tech Mono", monospace; font-size: 14px; padding: 7px 12px; background: transparent; color: var(--mute); border: 1px solid var(--line-2); cursor: pointer; }
+  .treebar button.on { background: var(--hull); color: #1a1405; border-color: var(--hull); }
+  .treebar button:focus-visible, .node:focus-visible { outline: 2px solid var(--hull); outline-offset: 2px; }
+  .node { cursor: pointer; }
+  .node text { font-family: "Share Tech Mono", monospace; }
+  #detail { position: sticky; top: 70px; border: 1px solid var(--line-2); background: var(--panel); padding: 16px; display: grid; gap: 8px; min-height: 240px; align-content: start; }
+  #detail .br { font-family: "Share Tech Mono", monospace; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
+  #detail h3 { font-size: 22px; }
+  #detail dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 14.5px; }
+  #detail dt { color: var(--mute); font-family: "Share Tech Mono", monospace; }
+  #detail dd { margin: 0; }
+  .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; }
+  .legend div { border-left: 4px solid var(--c); background: rgba(12,38,68,.72); padding: 8px 12px; font-size: 14px; }
+  .legend b { display: block; color: #f4efe2; }
+  .legend span { color: var(--mute); }
+
+  .ladder { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+  .ladder div { border: 1px solid var(--line); background: var(--panel); padding: 10px 12px; display: grid; gap: 6px; }
+  .ladder i { display: block; height: 34px; clip-path: polygon(0 0, 100% 0, 50% 100%); background: linear-gradient(90deg, var(--a), var(--b) 45%, var(--a)); }
+  .ladder b { font-size: 15px; color: #f4efe2; }
+  .ladder span { font-family: "Share Tech Mono", monospace; font-size: 13px; color: var(--mute); }
+
+  .relics { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; }
+  .relics div { border: 1px solid var(--line); background: var(--panel); padding: 10px 12px; font-size: 14.5px; }
+  .relics b { color: #f4efe2; }
+  .relics span { display: block; color: var(--mute); font-size: 13.5px; }
+
+  /* ---- checklist ---- */
+  .check { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
+  .check .box ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+  .check li { display: grid; grid-template-columns: 74px 1fr; gap: 10px; align-items: baseline; font-size: 15px; }
+  .st { font-family: "Share Tech Mono", monospace; font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; text-align: center; padding: 2px 0; border: 1px solid; }
+  .st.done { color: var(--teal); border-color: var(--teal); }
+  .st.part { color: var(--gold); border-color: var(--gold); }
+  .st.todo { color: var(--mute); border-color: var(--line-2); }
+  .st.you { color: #1a1405; background: var(--hull); border-color: var(--hull); }
+  .keyrow { display: flex; flex-wrap: wrap; gap: 14px; font-size: 14px; color: var(--mute); }
+  .keyrow span { display: inline-flex; gap: 6px; align-items: center; }
+  .keyrow .st { width: 64px; }
+
+  ol.passes { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; counter-reset: p; }
+  ol.passes li { counter-increment: p; border: 1px solid var(--line); background: rgba(12,38,68,.72); padding: 14px 16px 14px 64px; position: relative; }
+  ol.passes li::before { content: counter(p); position: absolute; left: 18px; top: 10px; font-family: "Saira Stencil One", sans-serif; font-size: 34px; color: var(--hull); }
+  ol.passes b { color: #f4efe2; }
+
+  .decide { display: grid; gap: 10px; }
+  .decide div { border: 1px solid var(--line-2); background: var(--panel); padding: 14px 16px; display: grid; gap: 4px; }
+  .decide b { color: #f4efe2; font-size: 17px; }
+  .decide em { font-style: normal; color: var(--hull); font-family: "Share Tech Mono", monospace; font-size: 14px; }
+  .sources { font-size: 13.5px; color: var(--mute); columns: 2 320px; }
+  .sources a { word-break: break-all; }
+
+  @media (max-width: 860px) { .treebox { grid-template-columns: 1fr; } #detail { position: static; } }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Sections">
+    <a href="#verdict">Verdict</a><a href="#loop">Core loop</a><a href="#world">World</a><a href="#tree">Upgrade tree</a>
+    <a href="#drills">Drills</a><a href="#relics">Relics</a><a href="#story">Story</a><a href="#checklist">Checklist</a>
+    <a href="#build">Build order</a><a href="#decide">Your decisions</a>
+  </nav>
+
+  <header class="hero">
+    <span class="eyebrow">Full game plan · for approval</span>
+    <h1>DEEP<span>LINE</span> 1.0</h1>
+    <p class="lede">A drilling sub goes down an ocean trench that turns into something much worse. This page is the whole game: what goes in it, the full upgrade tree, what is already built, what is left, and the few decisions only you can make.</p>
+    <div class="spec">
+      <div><b>~3 h</b><span>main path, plus post-game</span></div>
+      <div><b>$4.99</b><span>Steam, Windows / Mac / Linux / Deck</span></div>
+      <div><b>9</b><span>zones, from 50 m to the Heart</span></div>
+      <div><b>9</b><span>bosses, one per zone</span></div>
+      <div><b>80</b><span>tree nodes, 311 upgrade levels</span></div>
+      <div><b>24</b><span>relics to collect</span></div>
+      <div><b>2</b><span>endings</span></div>
+    </div>
+  </header>
+
+  <section id="verdict">
+    <span class="eyebrow">What the research says</span>
+    <h2>Verdict: build it, but make it different</h2>
+    <div class="cols2">
+      <div class="box">
+        <h3>The genre sells</h3>
+        <ul class="clean">
+          <li><b>Nodebuster</b>: about 400k copies at about $2, 97% positive, 4 hours, one big tree that unfolds from the centre.</li>
+          <li><b>Shelldiver</b> (Nov 2025, $4.99): oxygen dives, a big branching tree, about 590k copies (estimated), 98% positive.</li>
+          <li><b>Digseum</b>: 2 to 4 hours, relics that level up when you find duplicates, 97% positive.</li>
+          <li><b>A Game About Digging A Hole</b>: 1 million copies. Its twist ending is what people talk about.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>What every hit has</h3>
+        <ul class="clean">
+          <li>A short run, then spending in one big tree, then a stronger run.</li>
+          <li>Something new every 20 to 40 minutes: a zone, currency, enemy, tab or machine.</li>
+          <li>A boss that marks the end of each tier and gives a permanent unlock.</li>
+          <li>Automation about a third of the way in.</li>
+          <li>A real ending. Players praise "respects my time" and "clear end goal".</li>
+        </ul>
+      </div>
+      <div class="box warn">
+        <h3>Risks we must design around</h3>
+        <ul class="clean">
+          <li><b>Shelldiver is close.</b> It is a cozy turtle game. We go the other way: drilling, dread, bosses, a twist.</li>
+          <li><b>Drill Deep</b> (2026) is a cozy-to-eldritch drilling idle game. Same mood at the end, but no sub, no ocean, no bosses.</li>
+          <li><b>The name "Deep Line" is taken</b> on Steam by a small horror game. We need a new name.</li>
+          <li><b>Refunds:</b> Steam refunds anything under 2 hours played. The main path must take 2.5 hours or more.</li>
+          <li><b>Most-hated flaws:</b> late grind walls, "nothing new after X", unclear upgrades, save loss.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>What makes ours stand out</h3>
+        <ul class="clean">
+          <li>A physical drill sub you can see, with every upgrade visible on it.</li>
+          <li>A descent that turns into horror, told over the radio, ending under the trench floor.</li>
+          <li>Darkness and a headlamp: past 200 m you only see what you light.</li>
+          <li>A boss that guards every zone, each with its own trick.</li>
+          <li>A depth scale that explodes: 50 m, then 1 km, then 66 km, then a readout that breaks.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="loop">
+    <span class="eyebrow">Core loop</span>
+    <h2>One dive, then one decision</h2>
+    <div class="loop">
+      <div><b>1 · LAUNCH</b>The winch drops you at your deepest checkpoint.</div>
+      <div><b>2 · DIVE</b>Sink, drill ore and creatures, grab air pockets, dodge hazards. Oxygen is the timer.</div>
+      <div><b>3 · BOSS</b>Reach the zone floor and the guardian rises. Beat it to move the checkpoint.</div>
+      <div><b>4 · SURFACE</b>Sell the haul. Credits, Specimens and Pearls go to the dock.</div>
+      <div><b>5 · REFIT</b>Buy in the tree, slot relics, read the logbook. Launch again.</div>
+    </div>
+    <p>Dives last 10 seconds at the start and around 60 to 90 seconds late in the game. Early on you buy something every 30 to 60 seconds, later every few minutes. Something new appears every 20 minutes at most.</p>
+  </section>
+
+  <section id="world">
+    <span class="eyebrow">The world</span>
+    <h2>Nine zones, three acts</h2>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Zone</th><th>Depth</th><th>Ores</th><th>Creatures and hazards</th><th>Boss</th><th>What is new here</th></tr></thead>
+        <tbody>
+          <tr class="act"><td colspan="6">ACT 1 · THE JOB · about 45 minutes</td></tr>
+          <tr><td class="z">Sunlit Shelf</td><td class="d">0–50 m</td><td>Sandstone, copper</td><td>Hermit crabs, air pockets, box jellyfish</td><td class="b">Giant Clam</td><td>Drilling, oxygen, the first 10 upgrades</td></tr>
+          <tr><td class="z">Kelp Twilight</td><td class="d">50–200 m</td><td>Iron nodules, silver</td><td>Viperfish, lanternfish swarms, moray ambush from the kelp</td><td class="b">Anglerfish</td><td>Creatures drop Specimens, the Biology branch opens</td></tr>
+          <tr><td class="z">Midnight Trench</td><td class="d">200 m–1 km</td><td>Gold, pearl oysters</td><td>Giant isopods, vampire squid (ink blinds your lamp), frilled sharks</td><td class="b">The Leviathan</td><td>Real darkness, the headlamp matters, Pearls appear</td></tr>
+          <tr class="act"><td colspan="6">ACT 2 · THE HERON · about 70 minutes</td></tr>
+          <tr><td class="z">Wreck Graveyard</td><td class="d">1–3 km</td><td>Scrap steel, platinum</td><td>Wreck crabs, drowned divers, naval mines that explode</td><td class="b">The Hollow Survey</td><td>Wrecks hold relics and the lost sub's logs</td></tr>
+          <tr><td class="z">Hadal Vents</td><td class="d">3–7 km</td><td>Sulfur crystal, cobalt, obsidian</td><td>Tube worms, yeti crabs, magma eels, scalding geysers</td><td class="b">Vent Wyrm</td><td>Heat hazard, thermal shielding, automation peaks</td></tr>
+          <tr><td class="z">Sunken City</td><td class="d">7–11 km</td><td>Emerald, ruby, carved stone</td><td>Stone sentinels, eyeless fish, coral idols</td><td class="b">The Drowned King</td><td>Inscriptions open the Ancient branch</td></tr>
+          <tr class="act"><td colspan="6">ACT 3 · THE RED BELOW · about 55 minutes</td></tr>
+          <tr><td class="z">Beneath the Floor</td><td class="d">11–30 km</td><td>Diamond, deep crystal</td><td>Crystal crawlers, rock worms, pressure pockets</td><td class="b">Crystal Titan</td><td>No more water: oxygen drains twice as fast</td></tr>
+          <tr><td class="z">The Red Below</td><td class="d">30–66 km</td><td>Brimstone, bone-coral, hellglass</td><td>Brimstone crabs, flayed eels, chain wraiths, burning souls</td><td class="b">The Warden</td><td>The radio breaks, the HUD glitches, the lamp flickers</td></tr>
+          <tr><td class="z">The Heart</td><td class="d">−66,666 m</td><td>Heartstone</td><td>Everything, all at once</td><td class="b">The Thing That Waits</td><td>Final fight, then one of two endings</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Each zone gets its own water colour, wall shape, background creature, music layer and around three new creatures, so the game changes every 15 to 25 minutes.</p>
+  </section>
+
+  <section id="tree">
+    <span class="eyebrow">Upgrade tree</span>
+    <h2>A real tree, grown from the sub</h2>
+    <p>The whole tree starts as just the Minnow and four parts. Buying a part reveals the parts connected to it, so the tree grows outward across the game. Locked parts show as silhouettes with the exact reason. Every part shows its level, its price and its effect before you buy it. Click or tab through the nodes below to read them.</p>
+    <div class="treebox">
+      <div class="svgwrap">
+        <div class="treebar" role="group" aria-label="Tree view">
+          <button id="vFull" class="on">Full tree</button>
+          <button id="vStart">What you see at the start</button>
+        </div>
+        <svg id="treeSvg" viewBox="-700 -700 1400 1400" role="img" aria-label="Radial upgrade tree with 80 parts in six branches"></svg>
+      </div>
+      <aside id="detail" aria-live="polite"></aside>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="cols2">
+      <div class="box">
+        <h3>Three currencies, introduced one at a time</h3>
+        <ul class="clean">
+          <li><b>Credits</b> from everything you break. Used all game.</li>
+          <li><b>Specimens</b> from creatures, from zone 2. Spent in Biology.</li>
+          <li><b>Abyssal Pearls</b> from bosses and pearl oysters, from zone 3. Spent on drill heads, pressure hulls and the Ancient branch.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>How the tree screen works</h3>
+        <ul class="clean">
+          <li>Drag to pan, wheel to zoom; the view is remembered between dives.</li>
+          <li>Hover shows now → next, price and what it unlocks. Shift-click buys max.</li>
+          <li>Parts you can afford glow. Milestone parts (drill heads, pressure hulls) are diamonds.</li>
+          <li>Icons and level rings stay readable when zoomed out, including on a Steam Deck.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="drills">
+    <span class="eyebrow">Drill heads</span>
+    <h2>Eight drills, each one you can see</h2>
+    <p>Each boss unlocks the next head. Every head changes how the drill looks and at least doubles its damage.</p>
+    <div class="ladder">
+      <div><i style="--a:#4a4f55;--b:#9aa2a9"></i><b>Iron</b><span>start</span></div>
+      <div><i style="--a:#3b434a;--b:#e9eef2"></i><b>Steel</b><span>×2 · Giant Clam</span></div>
+      <div><i style="--a:#8a5d0b;--b:#ffe58c"></i><b>Gold</b><span>×2, +10% credits · Anglerfish</span></div>
+      <div><i style="--a:#1c1f23;--b:#aab3bb"></i><b>Tungsten</b><span>×2.5 · Leviathan</span></div>
+      <div><i style="--a:#12505c;--b:#e6fdff"></i><b>Diamond</b><span>×2.5, cuts armour · Hollow Survey</span></div>
+      <div><i style="--a:#0b0b12;--b:#6d5a8a"></i><b>Obsidian</b><span>×3, heat-proof · Vent Wyrm</span></div>
+      <div><i style="--a:#5a0f08;--b:#ff8a3c"></i><b>Hellforged</b><span>×3, burns · Crystal Titan</span></div>
+      <div><i style="--a:#3a0a1a;--b:#ff5a7a"></i><b>Heartstone</b><span>×4 · The Warden</span></div>
+    </div>
+  </section>
+
+  <section id="relics">
+    <span class="eyebrow">Relics</span>
+    <h2>24 relics, pulled from wrecks and bosses</h2>
+    <p>Relics sit in a glass case at the dock. Each one gives a passive bonus you feel in the next dive. Finding a duplicate ranks it up from I to III. Six of them are the Heron's survey logs, which tell the story and unlock the second ending.</p>
+    <div class="relics" id="relicGrid"></div>
+  </section>
+
+  <section id="story">
+    <span class="eyebrow">Story</span>
+    <h2>Told over the radio, then not</h2>
+    <div class="cols2">
+      <div class="box"><h3>Act 1 · The job</h3><p>Meridian Salvage hires you to strip ore from a trench where a survey sub, the Heron, went missing. The captain talks you down on channel 16. Everything is routine, apart from the size of the things below.</p></div>
+      <div class="box"><h3>Act 2 · The Heron</h3><p>You find the Heron's wreck and its pilot's logs. She kept going deeper on purpose. The city walls carry the same warning over and over. The captain stops answering some questions.</p></div>
+      <div class="box"><h3>Act 3 · The Red Below</h3><p>The floor splits. The water boils. The radio turns to static, then the captain's voice comes back wrong. The depth readout stops making sense. Meridian was never paying you for ore.</p></div>
+      <div class="box"><h3>Two endings</h3><p><b>Main:</b> you break the Heart and the trench closes over you. <b>True:</b> with all six Heron logs, you learn what the Heart is and can seal it instead, and surface. Credits roll either way; the post-game opens after.</p></div>
+    </div>
+    <p>Story is never a text wall. It arrives as radio lines during dives, log pages in the logbook, and changes in the world itself: the lamp flickers, the HUD glitches, the numbers break.</p>
+  </section>
+
+  <section id="checklist">
+    <span class="eyebrow">Checklist</span>
+    <h2>Everything the finished game needs</h2>
+    <div class="keyrow">
+      <span><i class="st done">Built</i> in the current prototype</span>
+      <span><i class="st part">Partly</i> started, needs finishing</span>
+      <span><i class="st todo">To build</i> by me</span>
+      <span><i class="st you">You</i> only you can do it</span>
+    </div>
+    <div class="check" id="checklist"></div>
+  </section>
+
+  <section id="build">
+    <span class="eyebrow">Build order</span>
+    <h2>Four big passes, back to back</h2>
+    <p>Once you approve, I build straight through without stopping for approval between passes. After each pass the game link updates so you can play it. You only need to step in if something feels wrong.</p>
+    <ol class="passes">
+      <li><b>Engine and tree.</b> Rebuild the game around data files for zones, creatures, bosses and the tree. New radial tree screen with pan, zoom, reveal and tooltips. Three currencies, drill heads, pressure hulls. The simulator updated for the full 9-zone curve.</li>
+      <li><b>All the content.</b> Nine zones with their own look, about 30 creatures and hazards that behave differently, all nine bosses, relics and wreck caches, the radio script, the logs and both endings.</li>
+      <li><b>A finished game around it.</b> Settings, robust saves with backups and export, stats, depth map, 40 achievements, onboarding for the first two minutes, code-generated music and sound for every zone, a text table ready for translation.</li>
+      <li><b>Balance and ship.</b> Tune to about 3 hours with the simulator and your playtests. Package with Electron for Windows, Mac, Linux and Steam Deck, wire Steam achievements and cloud saves, cut a 30-minute demo, and render store art and screenshots from the game itself.</li>
+    </ol>
+    <p>This is several long build sessions, not one. Balance is the part that needs you: play it and tell me where it drags.</p>
+  </section>
+
+  <section id="decide">
+    <span class="eyebrow">Your decisions</span>
+    <h2>Approve these and I start</h2>
+    <div class="decide">
+      <div><b>1 · The name</b><span>"Deep Line" is taken on Steam. Candidates: <em>Hadal</em>, <em>Crush Depth</em>, <em>Minnow</em>, <em>The Red Below</em>. I will check the one you pick before we use it.</span></div>
+      <div><b>2 · Default controls</b><span>All three stay in Settings. Which one should a new player start with? My pick: <em>Drill arm</em>, because it looks like a real machine and keeps the sub out of the way.</span></div>
+      <div><b>3 · Two endings</b><span>Main ending plus a true ending for collecting all six Heron logs. My pick: <em>yes</em>, it gives a reason to replay and is cheap to build.</span></div>
+      <div><b>4 · AI disclosure on Steam</b><span>All art and sound come from code I write, with no asset packs. Steam's January 2026 rules require disclosing AI-generated content that players see or hear. Art drawn by AI-written code is a grey area. My pick: <em>disclose it plainly</em>. Players punish hidden AI much more than honest AI.</span></div>
+      <div><b>5 · Store page timing</b><span>A coming-soon page should go up as early as possible, and needs the $100 Steamworks account. My pick: <em>open the account now</em>, since tax and ID checks take up to a week and there is a 30-day wait before release.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Sources</span>
+    <div class="sources">
+      <p><a href="https://store.steampowered.com/app/3107330/Nodebuster/">Nodebuster on Steam</a> · <a href="https://games-stats.com/steam/game/nodebuster/">Nodebuster stats</a> · <a href="https://store.steampowered.com/app/3862670/Shelldiver/">Shelldiver on Steam</a> · <a href="https://playwanderer.online/game-reviews/shelldiver">Shelldiver review (Wanderer)</a> · <a href="https://store.steampowered.com/app/3361470/Digseum/">Digseum on Steam</a> · <a href="https://gamalytic.com/game/3361470">Digseum stats</a> · <a href="https://www.pcgamesn.com/a-game-about-digging-a-hole/one-million-sales">A Game About Digging A Hole, 1M sales</a> · <a href="https://store.steampowered.com/app/4268970/Drill_Deep/">Drill Deep on Steam</a> · <a href="https://store.steampowered.com/app/3876470/Deep_Line/">Deep Line on Steam (name taken)</a> · <a href="https://motherload.fandom.com/wiki/Satan">Motherload's hidden final boss</a> · <a href="https://www.feedme.design/designing-with-depth-how-subnautica-turns-the-ocean-into-its-greatest-threat/">How Subnautica builds depth dread</a> · <a href="https://store.steampowered.com/steam_refunds/">Steam refund policy</a> · <a href="https://kotaku.com/steam-indie-short-pc-refund-paddle-paddle-paddle-zoroarts-2000712822">Short games and refunds</a> · <a href="https://www.pcgamer.com/software/ai/steam-updates-ai-disclosure-form-to-specify-that-its-focused-on-ai-generated-content-that-is-consumed-by-players-not-efficiency-tools-used-behind-the-scenes/">Steam AI disclosure update</a> · <a href="https://github.com/ceifa/steamworks.js">steamworks.js</a> · <a href="https://phaser.io/news/2025/03/publishing-web-games-on-steam-with-electron">Publishing web games on Steam with Electron</a> · <a href="https://partner.steamgames.com/doc/store/assets/standard">Steam store assets</a> · <a href="https://alconost.com/en/blog/steam-language-mix-indies">Steam language mix</a> · <a href="https://www.neonlightsmedia.com/blog/steam-game-releases-2025-fail-gamalytic-data">2025 Steam revenue data</a></p>
+    </div>
+  </section>
+</div>
+
+<script src="upgrade-tree.js"></script>
+<script>
+(() => {
+  const TREE = window.DEEPLINE_TREE;
+  const $ = id => document.getElementById(id);
+  const NS = 'http://www.w3.org/2000/svg';
+  const CUR = { cr: 'Credits', sp: 'Specimens', pe: 'Abyssal Pearls' };
+  const byId = Object.fromEntries(TREE.nodes.map(n => [n.id, n]));
+  const kids = {};
+  TREE.nodes.forEach(n => { if (n.parent) (kids[n.parent] = kids[n.parent] || []).push(n); });
+
+  // ---- radial layout: each branch gets a slice sized by how many leaves it has
+  const leaves = n => (kids[n.id] || []).reduce((a, c) => a + leaves(c), 0) || 1;
+  const order = ['drill', 'systems', 'ancient', 'biology', 'salvage', 'hull'];
+  const roots = order.flatMap(b => kids.core.filter(n => n.branch === b));
+  const total = roots.reduce((a, r) => a + leaves(r), 0), gap = 5 * Math.PI / 180;
+  const R = d => d ? 70 + d * 96 : 0;
+  const pos = { core: { x: 0, y: 0, a: 0, d: 0 } };
+  function place(n, a0, a1, d) {
+    const a = (a0 + a1) / 2;
+    pos[n.id] = { x: Math.cos(a) * R(d), y: Math.sin(a) * R(d), a, d };
+    let cur = a0;
+    const span = a1 - a0, L = leaves(n);
+    (kids[n.id] || []).forEach(c => { const w = span * leaves(c) / L; place(c, cur, cur + w, d + 1); cur += w; });
+  }
+  let start = -Math.PI / 2 - (2 * Math.PI) * leaves(roots[0]) / total / 2;
+  roots.forEach(r => { const w = (2 * Math.PI - gap * roots.length) * leaves(r) / total; place(r, start + gap / 2, start + gap / 2 + w, 1); start += w + gap; });
+  // fit the drawing to the tree, with room for labels
+  const xs = Object.values(pos).map(p => p.x), ys = Object.values(pos).map(p => p.y);
+  const vb = [Math.min(...xs) - 190, Math.min(...ys) - 70, Math.max(...xs) - Math.min(...xs) + 380, Math.max(...ys) - Math.min(...ys) + 140];
+
+  // at the start of the game: the four free parts, their neighbours as silhouettes, gated roots as locks
+  const startOwned = new Set(['core']);
+  const startVisible = new Set(['core', ...kids.core.map(n => n.id)]);
+  kids.core.forEach(r => { if (!r.gate) (kids[r.id] || []).forEach(c => startVisible.add(c.id)); });
+
+  const svg = $('treeSvg');
+  let view = 'full', selected = 'core';
+  const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); (parent || svg).appendChild(e); return e; };
+
+  function draw() {
+    svg.innerHTML = '';
+    svg.setAttribute('viewBox', vb.map(v => v.toFixed(0)).join(' '));
+    // ring guides
+    for (let d = 1; d <= 9; d++) el('circle', { cx: 0, cy: 0, r: R(d), fill: 'none', stroke: 'rgba(140,190,255,.08)', 'stroke-width': 1 });
+    const shown = n => view === 'full' || startVisible.has(n.id);
+    const ghost = n => view === 'start' && !startOwned.has(n.id) && n.parent !== 'core';
+    const locked = n => view === 'start' && n.parent === 'core' && !!n.gate;
+    // links
+    TREE.nodes.forEach(n => {
+      if (!n.parent || !shown(n)) return;
+      const p = pos[n.parent], q = pos[n.id];
+      const col = TREE.branches[n.branch].color;
+      el('line', { x1: p.x, y1: p.y, x2: q.x, y2: q.y, stroke: col, 'stroke-opacity': ghost(n) || locked(n) ? .25 : .55, 'stroke-width': 3, 'stroke-dasharray': ghost(n) || locked(n) ? '6 6' : '' });
+    });
+    // nodes
+    TREE.nodes.forEach(n => {
+      if (!shown(n)) return;
+      const q = pos[n.id], col = TREE.branches[n.branch].color, g = el('g', { class: 'node', tabindex: 0, role: 'button', 'aria-label': n.name, transform: 'translate(' + q.x.toFixed(1) + ',' + q.y.toFixed(1) + ')' });
+      const dim = ghost(n) || locked(n);
+      if (n.id === 'core') {
+        el('circle', { r: 30, fill: '#f0b429', stroke: '#3f2b06', 'stroke-width': 3 }, g);
+        el('circle', { r: 11, cy: -3, fill: '#4fb6c7', stroke: '#7b8288', 'stroke-width': 4 }, g);
+        el('path', { d: 'M-9 30 L9 30 L0 52 Z', fill: '#b7c1c9' }, g);
+      } else if (n.max === 1) {
+        el('rect', { x: -14, y: -14, width: 28, height: 28, transform: 'rotate(45)', fill: dim ? '#0a1c33' : '#0c2644', stroke: col, 'stroke-opacity': dim ? .35 : 1, 'stroke-width': 3 }, g);
+      } else {
+        el('circle', { r: 16, fill: dim ? '#0a1c33' : '#0c2644', stroke: col, 'stroke-opacity': dim ? .35 : 1, 'stroke-width': 3 }, g);
+      }
+      if (n.id !== 'core') {
+        const t = el('text', { 'text-anchor': 'middle', y: 4.5, 'font-size': 13, fill: dim ? 'rgba(216,231,251,.4)' : '#d8e7fb' }, g);
+        t.textContent = locked(n) ? '🔒' : ghost(n) ? '?' : (n.max === 1 ? '★' : n.max);
+        if (view === 'full' || !dim) {
+          // label outward from the centre
+          const out = q.a, lx = Math.cos(out) * 24, ly = Math.sin(out) * 24 + 4;
+          const lab = el('text', { x: lx.toFixed(1), y: ly.toFixed(1), 'text-anchor': Math.abs(Math.cos(out)) < .3 ? 'middle' : Math.cos(out) > 0 ? 'start' : 'end', 'font-size': 15, fill: '#c9dbef', stroke: '#061426', 'stroke-width': 5, 'paint-order': 'stroke' }, g);
+          lab.textContent = n.name;
+        }
+      }
+      if (n.id === selected) el('circle', { r: 24, fill: 'none', stroke: '#f0b429', 'stroke-width': 2, 'stroke-dasharray': '4 4' }, g);
+      const pick = () => { selected = n.id; detail(n); draw(); const again = svg.querySelector('[aria-label="' + CSS.escape(n.name) + '"]'); if (again) again.focus(); };
+      g.addEventListener('click', pick);
+      g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+      g.addEventListener('mouseenter', () => detail(n));
+    });
+  }
+
+  function detail(n) {
+    const b = TREE.branches[n.branch];
+    const parent = n.parent ? byId[n.parent].name : '–';
+    const next = (kids[n.id] || []).map(c => c.name).join(', ') || 'nothing (end of a path)';
+    $('detail').innerHTML =
+      '<span class="br" style="color:' + b.color + '">' + b.name + '</span>' +
+      '<h3>' + n.name + '</h3>' +
+      '<p>' + n.fx + '</p>' +
+      '<dl>' +
+      (n.id === 'core' ? '' : '<dt>Levels</dt><dd>' + n.max + '</dd><dt>Paid in</dt><dd>' + CUR[n.cur] + '</dd>') +
+      '<dt>Needs</dt><dd>' + (n.gate ? n.gate + (n.parent ? ' + ' + parent : '') : parent) + '</dd>' +
+      '<dt>Reveals</dt><dd>' + next + '</dd>' +
+      '</dl>';
+  }
+
+  $('vFull').addEventListener('click', () => { view = 'full'; $('vFull').classList.add('on'); $('vStart').classList.remove('on'); draw(); });
+  $('vStart').addEventListener('click', () => { view = 'start'; $('vStart').classList.add('on'); $('vFull').classList.remove('on'); draw(); });
+
+  // legend with counts
+  $('legend').innerHTML = Object.entries(TREE.branches).filter(([k]) => k !== 'core').map(([k, b]) => {
+    const ns = TREE.nodes.filter(n => n.branch === k), lv = ns.reduce((a, n) => a + n.max, 0);
+    return '<div style="--c:' + b.color + '"><b>' + b.name + ' · ' + ns.length + ' parts, ' + lv + ' levels</b><span>' + b.what + '</span></div>';
+  }).join('');
+
+  // relics
+  const RELICS = [
+    ['Clam Pearl', 'Giant Clam', '+10% credits'], ["Angler's Lure", 'Anglerfish', 'Headlamp reaches 20% further'], ['Leviathan Lens', 'The Leviathan', '+5% critical chance'],
+    ["Heron's Dog Tag", 'Wreck Graveyard', '+3 s oxygen'], ["Captain's Compass", 'Wreck Graveyard', 'Rare ore glints through the dark'], ['Brass Helmet', 'Wreck Graveyard', 'Stings cost 15% less'],
+    ["Ship's Bell", 'Wreck Graveyard', 'Sonar reaches further'], ['Rusted Harpoon', 'Wreck Graveyard', '+10% damage to bosses'], ['Hollow Core', 'The Hollow Survey', 'Drones cut 25% harder'],
+    ['Vent Idol', 'Hadal Vents', 'Heat hurts half as much'], ['Wyrm Scale', 'Vent Wyrm', '+2 s oxygen, heat-proof hull'], ['Fossil Tooth', 'Hadal Vents', 'Creatures pay 20% more'],
+    ['Coral Idol', 'Sunken City', 'Air pockets give 25% more'], ['Drowned Crown', 'The Drowned King', '+20% Pearls'], ['Bone Flute', 'Sunken City', 'Jellyfish drift away'],
+    ['Crystal Heart', 'Crystal Titan', 'Bigger drill head'], ['Hellglass Shard', 'The Red Below', '+25% critical damage'], ["Warden's Chain", 'The Warden', '+15% all damage'],
+    ['Heron Log I–VI', 'Wrecks, all zones', 'Six pages of the story. Each +2% damage. All six unlock the true ending.'],
+  ];
+  $('relicGrid').innerHTML = RELICS.map(([n, w, e]) => '<div><b>' + n + '</b><span>' + w + '</span>' + e + '</div>').join('');
+
+  // checklist
+  const CHECK = {
+    'Core gameplay': [
+      ['done', 'Dive loop: oxygen timer, sinking, drilling, surfacing to the dock'],
+      ['done', 'Full-screen ocean with parallax walls, darkness and headlamp'],
+      ['done', 'Visible drill with flutes, heat glow, chips, sparks, grinding sound'],
+      ['part', 'Three control schemes (follow, drill arm, keyboard); pick a default'],
+      ['part', 'Bosses: 3 of 9 built (Clam, Anglerfish, Leviathan)'],
+      ['part', 'Creatures: 8 of about 30 built'],
+      ['todo', '9 zones, each with its own palette, walls, background life and music layer'],
+      ['todo', 'Creatures that behave: flee, chase, ink, explode, ambush, swarm'],
+      ['todo', 'Eight drill heads with their own look'],
+      ['todo', 'Pressure-hull depth gates'],
+      ['todo', 'Three currencies: Credits, Specimens, Pearls'],
+      ['todo', 'Crits, burn, shock and damage numbers you can read'],
+      ['todo', 'Automation: drones, torpedoes, depth charges, auto-drill'],
+    ],
+    'Progression and meta': [
+      ['part', 'Upgrade tree: 17 parts built; plan is 80 parts in a radial tree'],
+      ['todo', 'Tree screen: pan, zoom, reveal, tooltips, shift-click buy max'],
+      ['todo', 'Relic case: 24 relics, duplicates rank I–III'],
+      ['part', 'Logbook: specimens and radio log built; add Heron logs and boss trophies'],
+      ['todo', 'Depth map screen with zones, bosses and your record'],
+      ['todo', 'Stats screen: dives, time, targets, best depth, fastest boss'],
+      ['todo', '40 achievements, in game and on Steam'],
+      ['todo', 'Post-game: New Dive+ with modifiers and a speedrun timer'],
+    ],
+    'Story': [
+      ['part', 'Radio from the surface: written for zones 1–3'],
+      ['todo', 'Radio script for all 9 zones, with the captain turning strange'],
+      ['todo', 'Six Heron logs hidden in wrecks'],
+      ['todo', 'Glitching HUD, flickering lamp and a broken depth readout in Act 3'],
+      ['todo', 'Two ending scenes and credits'],
+    ],
+    'Screens and feel': [
+      ['done', 'Title scene with the salvage ship and the sub on the A-frame'],
+      ['done', 'Blueprint dock style, hazard-stripe launch button, pause menu'],
+      ['todo', 'Settings: volumes, fullscreen, UI scale, number format, shake, particles, controls, keys, language'],
+      ['todo', 'First two minutes teach the game without text walls'],
+      ['todo', 'Readable at 1280×800 for Steam Deck; colour-blind-safe markers'],
+    ],
+    'Sound': [
+      ['part', 'Code-generated sound effects and drill grinding'],
+      ['todo', 'Generated ambient music for each zone, boss themes, ending theme'],
+      ['todo', 'Creature calls, hull creaks, radio static, pressure groans'],
+    ],
+    'Tech and Steam': [
+      ['part', 'Saves in the browser; needs file saves with backups, export and version upgrades'],
+      ['todo', 'Electron build for Windows, Mac, Linux and Steam Deck'],
+      ['todo', 'Steam achievements and Cloud saves (steamworks.js)'],
+      ['todo', 'All text in one table, ready for Chinese, Russian, German, Spanish, Portuguese, Japanese'],
+      ['done', 'Balance simulator that plays the economy and prints the curve'],
+    ],
+    'Store and launch': [
+      ['you', 'Steamworks account, $100 fee, tax and ID checks'],
+      ['you', 'Pick the final name'],
+      ['todo', 'Capsule art, 8–10 screenshots and a 30–60 s trailer, all rendered from the game'],
+      ['you', 'Coming-soon page up early; aim for 7,000+ wishlists'],
+      ['todo', 'Demo: zones 1–2, about 30 minutes, progress carries over'],
+      ['you', 'Enter Steam Next Fest (Feb 2027 is the realistic one; confirm dates)'],
+      ['you', 'Price $4.99, 10–20% launch discount, honest playtime on the page'],
+    ],
+  };
+  const LABEL = { done: 'Built', part: 'Partly', todo: 'To build', you: 'You' };
+  $('checklist').innerHTML = Object.entries(CHECK).map(([h, items]) =>
+    '<div class="box"><h3>' + h + '</h3><ul>' + items.map(([s, t]) => '<li><i class="st ' + s + '">' + LABEL[s] + '</i><span>' + t + '</span></li>').join('') + '</ul></div>').join('');
+
+  detail(byId.core);
+  draw();
+})();
+</script>
