@@ -106,6 +106,12 @@
   #startLine { font-family: "Share Tech Mono", monospace; font-size: 15px; color: var(--mist); }
   #startLine b { color: var(--print-text); font-weight: 400; }
   .report .bottom .row .plain { flex: 1; }
+  .ctl { display: flex; flex-direction: column; gap: 6px; }
+  .ctl > span { font-family: "Share Tech Mono", monospace; font-size: 13px; letter-spacing: .14em; color: var(--mist); }
+  .ctl div { display: flex; gap: 4px; }
+  .ctl button { flex: 1; font-family: "Share Tech Mono", monospace; font-size: 14px; padding: 8px 6px; border: 1px solid rgba(219,233,247,.3); border-radius: 3px; background: rgba(3,8,15,.5); color: var(--mist); }
+  .ctl button.on { background: var(--hull); border-color: var(--hull); color: var(--hull-dark); font-weight: 700; }
+  #pause .ctl { width: 460px; text-align: left; }
 
   .tabs { position: absolute; left: 440px; right: 0; top: 0; height: 74px; display: flex; align-items: flex-end; gap: 4px; padding: 0 40px; border-bottom: 2px solid var(--print-line); }
   .tab {
@@ -205,6 +211,9 @@
         <div class="funds"><span>FUNDS</span><strong id="funds">0</strong></div>
         <div id="subStats"></div>
         <div class="bottom">
+          <div class="ctl"><span>CONTROLS · TEST ALL THREE</span><div>
+            <button data-ctl="follow">Follow mouse</button><button data-ctl="arm">Drill arm</button><button data-ctl="keys">Keyboard</button>
+          </div></div>
           <p id="startLine"></p>
           <button class="launch" id="btnDive">Launch</button>
           <div class="row">
@@ -230,6 +239,9 @@
       <div class="box">
         <h2>PAUSED</h2>
         <p>Oxygen is on hold.</p>
+        <div class="ctl"><span>CONTROLS · TEST ALL THREE</span><div>
+            <button data-ctl="follow">Follow mouse</button><button data-ctl="arm">Drill arm</button><button data-ctl="keys">Keyboard</button>
+          </div></div>
         <div class="row">
           <button class="launch" id="btnResume">Resume</button>
           <button class="plain" id="btnSurface">Surface now</button>
@@ -335,7 +347,7 @@
 
   // ---------- save ----------
   const SAVE_KEY = 'deepline.save.v3';
-  const fresh = () => ({ lv: {}, coins: 0, checkpoint: 0, best: 0, dives: 0, play: 0, beaten: [], won: false, seen: {}, heard: [] });
+  const fresh = () => ({ control: 'follow', lv: {}, coins: 0, checkpoint: 0, best: 0, dives: 0, play: 0, beaten: [], won: false, seen: {}, heard: [] });
   let S = fresh();
   function save() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch (e) {} }
   function load() {
@@ -408,7 +420,15 @@
   let parts = [], floats = [], rings = [], lights = [], shake = 0, T = 0;
   const snow = Array.from({ length: 140 }, () => ({ x: Math.random(), y: Math.random(), z: .25 + Math.random() * .75 }));
   const HR = 44; // hull radius
-  const sub = { x: SW / 2, y: 330, tilt: 0, spin: 0, grind: 0, heat: 0 };
+  const sub = { x: SW / 2, y: 330, tilt: 0, spin: 0, grind: 0, heat: 0, vx: 0, vy: 0 };
+  // drill arm mode: the sub holds station near the top and a two-joint arm reaches for the pointer
+  const arm = { ex: SW / 2, ey: 400, elx: SW / 2, ely: 300, ang: 0 };
+  const ctl = () => S.control || 'follow';
+  const armOn = () => mode === 'dive' && ctl() === 'arm';
+  const armReach = () => 190 + lvOf('size') * 14;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const angDiff = (a, b) => ((a - b + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+  const keys = {};
   let radioQ = [], radioCur = null, farBeast = null, farT = 6;
 
   // Wider Bit makes the drill head physically bigger; the head is what cuts.
@@ -416,14 +436,20 @@
   const drillHalf = () => 15 + st.radius * .34;
   const drillBase = () => HR * .62 + 22;
   const tipOffset = () => drillBase() + drillLen();
-  function tipPos() {
-    const d = tipOffset();
-    return { x: sub.x - Math.sin(sub.tilt) * d, y: sub.y + Math.cos(sub.tilt) * d };
+  // where the drill head starts and which way it points (ang 0 = straight down)
+  function drillPose() {
+    if (armOn()) return { x: arm.ex, y: arm.ey, ang: arm.ang };
+    const d = drillBase();
+    return { x: sub.x - Math.sin(sub.tilt) * d, y: sub.y + Math.cos(sub.tilt) * d, ang: sub.tilt };
   }
-  // the cutting part of the head: from a quarter of the way down to the tip
+  function tipPos() {
+    const p = drillPose(), L = drillLen();
+    return { x: p.x - Math.sin(p.ang) * L, y: p.y + Math.cos(p.ang) * L };
+  }
+  // the cutting part of the head: from a fifth of the way down to the tip
   function drillSeg() {
-    const a = drillBase() + drillLen() * .2, b = tipOffset(), sn = Math.sin(sub.tilt), cs = Math.cos(sub.tilt);
-    return { ax: sub.x - sn * a, ay: sub.y + cs * a, bx: sub.x - sn * b, by: sub.y + cs * b };
+    const p = drillPose(), L = drillLen(), sn = Math.sin(p.ang), cs = Math.cos(p.ang);
+    return { ax: p.x - sn * L * .2, ay: p.y + cs * L * .2, bx: p.x - sn * L, by: p.y + cs * L };
   }
   function segHit(px, py, g) {
     const dx = g.bx - g.ax, dy = g.by - g.ay;
@@ -551,13 +577,15 @@
     run = { air: st.air, maxAir: st.air, depth: start, start, nodes: [], earned: 0, rocks: 0, spawnT: 0, boss: null, sonarT: 4,
       drone: { x: SW / 2 + 80, y: 300, target: null, firing: false }, ending: 0, result: null, alarm: 0, intro: 1.6 };
     parts = []; floats = []; rings = []; lights = []; radioQ = []; radioCur = null;
-    sub.x = SW / 2; sub.y = start === 0 ? ANCHOR + 40 : 300; sub.tilt = 0;
+    sub.x = SW / 2; sub.y = start === 0 ? ANCHOR + 40 : 300; sub.tilt = 0; sub.vx = sub.vy = 0;
+    arm.ex = sub.x; arm.ey = sub.y + 160; arm.elx = sub.x + 60; arm.ely = sub.y + 90; arm.ang = 0;
     ptr.x = SW / 2; ptr.y = 420;
     for (let i = 0; i < 9; i++) { const n = makeNode(start + 2); n.y = SH * (.55 + i * .06); if (n.type !== 'jelly') run.nodes.push(n); }
     mode = 'dive'; paused = false;
     show(null);
     cv.classList.add('playing');
     float(SW / 2, 260, B.zoneAt(start).name.toUpperCase(), C.sand, 44, 2.6);
+    float(SW / 2, 310, { follow: 'MOUSE · the sub follows your aim', arm: 'MOUSE · the arm reaches where you point', keys: 'WASD or ARROWS · steer the sub' }[ctl()], C.mist, 20, 3.2);
     if (start === 0) radio('start');
     if (start === 50) radio('zone_kelp');
     if (start === 120) radio('zone_midnight');
@@ -791,7 +819,19 @@
     cv.classList.toggle('playing', !on);
     if (on) setHum(0);
   }
-  addEventListener('keydown', e => { if ((e.key === 'Escape' || e.key === 'p' || e.key === 'P') && mode === 'dive') { e.preventDefault(); setPause(!paused); } });
+  addEventListener('keydown', e => {
+    if ((e.key === 'Escape' || e.key === 'p' || e.key === 'P') && mode === 'dive') { e.preventDefault(); setPause(!paused); return; }
+    keys[e.key.toLowerCase()] = true;
+    if (mode === 'dive' && e.key.startsWith('Arrow')) e.preventDefault();
+  });
+  addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+  addEventListener('blur', () => { for (const key in keys) keys[key] = false; });
+  function setControl(c, keep) {
+    S.control = c;
+    if (!keep) save();
+    document.querySelectorAll('.ctl button').forEach(b => b.classList.toggle('on', b.dataset.ctl === c));
+  }
+  document.querySelectorAll('.ctl button').forEach(b => b.addEventListener('click', () => setControl(b.dataset.ctl)));
   document.addEventListener('visibilitychange', () => { if (document.hidden && mode === 'dive') setPause(true); });
 
   // ---------- update ----------
@@ -832,12 +872,35 @@
   function updateRun(dt) {
     const R = run;
     // the sub follows the pointer so the drill tip goes where you aim
-    const tx = Math.max(110, Math.min(SW - 110, ptr.x)), ty = Math.max(110, Math.min(SH - 200, ptr.y - tipOffset()));
-    const oldx = sub.x;
-    const ease = Math.min(1, dt * (R.intro > 0 ? 3 : 14));
-    sub.x += (tx - sub.x) * ease; sub.y += (ty - sub.y) * ease;
+    const oldx = sub.x, c = ctl();
+    if (c === 'follow') {
+      // the sub chases the pointer so the drill tip lands where you aim
+      const tx = clamp(ptr.x, 110, SW - 110), ty = clamp(ptr.y - tipOffset(), 110, SH - 200);
+      const ease = Math.min(1, dt * (R.intro > 0 ? 3 : 14));
+      sub.x += (tx - sub.x) * ease; sub.y += (ty - sub.y) * ease;
+    } else if (c === 'keys') {
+      const ax = (keys.d || keys.arrowright ? 1 : 0) - (keys.a || keys.arrowleft ? 1 : 0);
+      const ay = (keys.s || keys.arrowdown ? 1 : 0) - (keys.w || keys.arrowup ? 1 : 0);
+      sub.vx += ax * 2400 * dt; sub.vy += ay * 2400 * dt;
+      const damp = Math.pow(.015, dt); sub.vx *= damp; sub.vy *= damp;
+      const sp = Math.hypot(sub.vx, sub.vy); if (sp > 460) { sub.vx *= 460 / sp; sub.vy *= 460 / sp; }
+      sub.x = clamp(sub.x + sub.vx * dt, 110, SW - 110); sub.y = clamp(sub.y + sub.vy * dt, 110, SH - 200);
+    } else {
+      // the sub drifts slowly above the action; the arm does the reaching
+      sub.x += clamp(clamp(ptr.x, 220, SW - 220) - sub.x, -170 * dt, 170 * dt);
+      sub.y += (190 + Math.sin(T * 1.2) * 6 - sub.y) * Math.min(1, dt * (R.intro > 0 ? 1.5 : 3));
+      const sx = sub.x, sy = sub.y + HR * .7, reach = armReach(), L = drillLen();
+      let px = ptr.x - sx, py = ptr.y - sy; const d = Math.hypot(px, py) || 1; px /= d; py /= d;
+      const want = clamp(d - L, 30, reach);
+      const e = Math.min(1, dt * 18);
+      arm.ex += (sx + px * want - arm.ex) * e; arm.ey += (sy + py * want - arm.ey) * e;
+      arm.ang += angDiff(Math.atan2(-px, py), arm.ang) * e;
+      const L1 = reach / 2 + 4, vx2 = arm.ex - sx, vy2 = arm.ey - sy, D = clamp(Math.hypot(vx2, vy2), 1, 2 * L1 - 1);
+      const a = Math.atan2(vy2, vx2), off = Math.acos(clamp(D / (2 * L1), -1, 1)), side = ptr.x > sx ? -1 : 1;
+      arm.elx = sx + Math.cos(a + side * off) * L1; arm.ely = sy + Math.sin(a + side * off) * L1;
+    }
     const vx = (sub.x - oldx) / Math.max(dt, 1e-3);
-    sub.tilt += (Math.max(-.38, Math.min(.38, vx * .0011)) - sub.tilt) * Math.min(1, dt * 6);
+    sub.tilt += (clamp(vx * (c === 'arm' ? .0006 : .0011), -.38, .38) - sub.tilt) * Math.min(1, dt * 6);
     R.intro = Math.max(0, R.intro - dt);
 
     if (R.ending > 0) {
@@ -1351,15 +1414,21 @@
   }
 
   // ---------- the sub ----------
-  function drawDrill(hl) {
-    const len = drillLen(), hw = drillHalf(), y0 = hl * .62, yb = drillBase(), tipY = yb + len;
+  function drawDrill(yb, gearbox) {
+    const len = drillLen(), hw = drillHalf(), y0 = HR * .62, tipY = yb + len;
     const mat = lvOf('bit3') ? ['#12505c', '#8ff0ff', '#e6fdff', '#bff8ff'] : lvOf('bit2') ? ['#1c1f23', '#5d656d', '#aab3bb', '#d9a441'] : ['#3b434a', '#9aa5ae', '#e9eef2', '#c8ced3'];
     X.save();
     if (sub.grind > .1) X.translate((Math.random() - .5) * 2.4 * sub.grind, (Math.random() - .5) * 2.4 * sub.grind);
-    // gearbox housing under the hull
-    X.fillStyle = '#23292e'; X.fillRect(-hw - 9, y0 - 6, 2 * hw + 18, yb - y0 + 4);
-    X.fillStyle = '#3c454c'; X.fillRect(-hw - 9, y0 - 6, 2 * hw + 18, 5);
-    X.fillStyle = '#8a949c'; for (const bx of [-hw - 4, hw + 4]) { X.beginPath(); X.arc(bx, y0 + 4, 2.4, 0, 6.28); X.fill(); }
+    if (gearbox) {
+      // gearbox housing under the hull
+      X.fillStyle = '#23292e'; X.fillRect(-hw - 9, y0 - 6, 2 * hw + 18, yb - y0 + 4);
+      X.fillStyle = '#3c454c'; X.fillRect(-hw - 9, y0 - 6, 2 * hw + 18, 5);
+      X.fillStyle = '#8a949c'; for (const bx of [-hw - 4, hw + 4]) { X.beginPath(); X.arc(bx, y0 + 4, 2.4, 0, 6.28); X.fill(); }
+    } else {
+      // motor pod at the end of the arm
+      X.fillStyle = '#23292e'; X.fillRect(-hw * .8, -16, hw * 1.6, 14);
+      X.fillStyle = '#3c454c'; X.fillRect(-hw * .8, -16, hw * 1.6, 4);
+    }
     X.fillStyle = '#15191c'; X.fillRect(-hw * .6, yb - 5, hw * 1.2, 7);
     // auger head
     const head = () => { X.beginPath(); X.moveTo(-hw, yb); X.lineTo(hw, yb); X.quadraticCurveTo(hw * .92, yb + len * .55, 0, tipY); X.quadraticCurveTo(-hw * .92, yb + len * .55, -hw, yb); X.closePath(); };
@@ -1396,10 +1465,26 @@
     X.restore();
   }
 
+  function drawArm() {
+    const sx = sub.x, sy = sub.y + HR * .7, segs = [[sx, sy, arm.elx, arm.ely], [arm.elx, arm.ely, arm.ex, arm.ey]];
+    X.lineCap = 'round';
+    for (const [w, col] of [[18, '#161b1f'], [11, '#d99a1e']]) {
+      X.strokeStyle = col; X.lineWidth = w;
+      for (const [a, b, c2, d] of segs) { X.beginPath(); X.moveTo(a, b); X.lineTo(c2, d); X.stroke(); }
+    }
+    X.strokeStyle = 'rgba(200,210,220,.7)'; X.lineWidth = 3;
+    X.beginPath(); X.moveTo(sx + (arm.elx - sx) * .15, sy + (arm.ely - sy) * .15 - 7); X.lineTo(sx + (arm.elx - sx) * .8, sy + (arm.ely - sy) * .8 - 7); X.stroke();
+    for (const [x, y] of [[sx, sy], [arm.elx, arm.ely], [arm.ex, arm.ey]]) {
+      X.fillStyle = '#39434b'; X.beginPath(); X.arc(x, y, 10, 0, 6.28); X.fill();
+      X.fillStyle = '#9aa5ae'; X.beginPath(); X.arc(x, y, 3.5, 0, 6.28); X.fill();
+    }
+    X.save(); X.translate(arm.ex, arm.ey); X.rotate(arm.ang); drawDrill(0, false); X.restore();
+  }
+
   function drawSub() {
     const hl = HR;
     X.save(); X.translate(sub.x, sub.y); X.rotate(sub.tilt);
-    drawDrill(hl);
+    if (!armOn()) drawDrill(drillBase(), true);
     for (const side of [-1, 1]) {
       X.save(); X.translate(side * (hl + 4), 8);
       X.fillStyle = '#39434b'; X.fillRect(-9, -13, 18, 26);
@@ -1450,7 +1535,10 @@
   }
 
   // ---------- darkness and lamp light ----------
-  function lampPos() { return { x: sub.x - Math.sin(sub.tilt) * (HR - 8), y: sub.y + Math.cos(sub.tilt) * (HR - 8), ang: Math.PI / 2 + sub.tilt }; }
+  function lampPos() {
+    const a = armOn() ? arm.ang : sub.tilt;
+    return { x: sub.x - Math.sin(a) * (HR - 8), y: sub.y + Math.cos(a) * (HR - 8), ang: Math.PI / 2 + a };
+  }
   function drawDark(dark) {
     if (dark <= .01) return;
     const L = lctx;
@@ -1559,6 +1647,7 @@
       if (run.boss) drawBoss(run.boss);
       if (st.drone > 0) drawDrone(run.drone);
     }
+    if (armOn()) drawArm();
     drawSub();
     if (mode === 'dive') {
       // small aim mark where the drill tip is heading
@@ -1608,6 +1697,7 @@
     load();
     if (data && data.S) S = Object.assign(fresh(), data.S);
     st = B.stats(S.lv);
+    setControl(ctl(), true);
     openTitle();
     requestAnimationFrame(frame);
   }
