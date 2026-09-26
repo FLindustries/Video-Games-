@@ -232,3 +232,113 @@ First upgrades target damage, health or dig power, and the speed-up is the rewar
 ### Gaps
 - There is no source-verified data on exact first-dive length, first-upgrade cost, or whether any reference game locks movement speed behind a purchase.
 - Kongregate / Anthony Pecorella's "Math of Idle Games" was not fetched in this pass, so no cost-curve figures are included here.
+
+## 8. Suspense and pacing of reveals
+
+### Takeaway
+The memorable incrementals keep suspense by withholding the goal and the shape of the game, not only the numbers. Each game starts from almost nothing: one button in A Dark Room, a candy counter in Candy Box, a single paperclip click in Universal Paperclips. It then keeps changing what kind of game it is, a "paradigm shift" or "unfolding", so the player is always asking "what will this become?" Teases work best when they are partial and sensory: a sound before a sight, a single-colour silhouette, a placeholder with a hint, a visible-but-unreachable place. Spelling things out, or "oversharing", kills the mystery. Rewards stay exciting through layered payouts (in-run gold plus permanent unlocks), near-misses and first-time events. A dense list of fixed-value upgrades does not do this.
+
+### Cited Findings
+
+**How reveals are staged (mechanics, screens, zones, genre)**
+- **Candy Box!** "starts with only a save button and a candy counter… options appear as the player performs actions." Candies accrue at 1 per second and unlock "progressively complex mechanics, eventually evolving into a full role-playing adventure" with inventory, quests and combat. — [search summary of Candy Box! Wikipedia / Grokipedia](https://en.wikipedia.org/wiki/Candy_Box!)
+- **Candy Box! inspired A Dark Room:** "Another incremental game, called _Candy Box_, inspired _A Dark Room's_ creation." — [PocketGamer.biz, "Shedding light: The making of A Dark Room"](https://www.pocketgamer.biz/shedding-light-the-making-of-a-dark-room/)
+- **A Dark Room's opening sequence:**
+  1. You light a fire, turning "a dark room" into a "firelit room".
+  2. After stoking it several times, a stranger stumbles in and becomes a builder.
+  3. Later, a shopkeeper sells a compass.
+  4. The game then "take[s] on a decidedly RPG-like tone where you explore a map, enter mini-dungeons, fight battles."
+
+  — [search summary of TouchArcade review](https://toucharcade.com/2014/06/03/a-dark-room-review/); [Jay is Games](https://jayisgames.com/review/a-dark-room.php)
+- **A Dark Room withholds the goal:** it "withholds the one piece of information that is traditionally the very first thing that is established… the object of the game." Its systems are "slow and initially incrementally revealed… (which then grow exponentially larger, just as a room becomes a village and then becomes a region)." — [PopMatters, "A Dark Room Is the Most Fun You'll Ever Have with a Spreadsheet"](https://www.popmatters.com/183319-a-dark-room-the-most-fun-youll-ever-have-with-a-spreadsheet-2495645232.html)
+- **Curiosity in A Dark Room:** the game "relies on the curiosity of the player in first exploring the systems of play… and then on an even greater curiosity… about why and what significance those systems are supposed to have." Also: "the central mystery of the game is what drives the player's desire to persist in what otherwise seems like simple spreadsheet management." — [PopMatters](https://www.popmatters.com/183319-a-dark-room-the-most-fun-youll-ever-have-with-a-spreadsheet-2495645232.html)
+- **Universal Paperclips (Frank Lantz, 9 Oct 2017)** moves through distinct phases:
+  1. Hand-clicking clips.
+  2. Automation and marketing.
+  3. AI "computational" upgrades.
+  4. Stock market and market monopoly.
+  5. Drones converting Earth.
+  6. Self-replicating space probes with "value drift".
+  7. An endgame choice.
+
+  — [Wikipedia](https://en.wikipedia.org/wiki/Universal_Paperclips)
+- **Universal Paperclips interface:** it starts as clicks and pricing, then expands to manufacturing, marketing and computation. By the end it shows "trillions of self-replicating drones spreading throughout the cosmos", with octillion-scale metrics and a battle with "drifters". — [Aaron A. Reed, 50 Years of Text Games: "2017: Universal Paperclips"](https://if50.substack.com/p/2017-universal-paperclips)
+- **Paperclips' second stage** "is more akin to a power management simulator": you balance power production against drone consumption. The game changes genre, not just scale. — [search summary of Universal Paperclips Wiki](https://universalpaperclips.fandom.com/wiki/Stages)
+- **Lantz on Paperclips:** players gain "direct, first-hand experience of what it means to be fully compelled by an arbitrary goal." Also: "it's fun to make this number go up." — [Wikipedia](https://en.wikipedia.org/wiki/Universal_Paperclips); [IF50](https://if50.substack.com/p/2017-universal-paperclips)
+- **Reception of Paperclips:** "Like all the best clicker games, there's a sinister and funny underbelly" (Rock, Paper, Shotgun), and "Taking a denigrated game genre and making it more than it is" (Wired). — [Wikipedia](https://en.wikipedia.org/wiki/Universal_Paperclips)
+- **Genre terminology:** incrementals "often involve several phases of completely distinct gameplay that fully replace the previous, called 'paradigm shifts'", with examples such as Crank and A Dark Room. — [search summary citing Wikipedia "Incremental game"](https://en.wikipedia.org/wiki/Incremental_game)
+- **Unfolding as the top design factor:** the Paper Pilot guide calls "unfolding" (prestige layers plus paradigm shifts) the highest-value design factor. It creates "a sense of mystery, with the player anticipating what will happen next" and is "shaking up the gameplay before it gets too stale." — [The Paper Pilot, Guide to Incrementals: Defining the Genre](https://paperpilot.dev/garden/guide-to-incrementals/defining-the-genre)
+- **Kittens Game:** progress "feels like peeling back layers of an onion": survival, then arcane tech, religion, trade and finally space. "There's always a progression of things to do, none of which are instant, allowing players to see forward through a chain of unlocks." Across resets, early progress speeds up while later materials "slow you down in turn." — [search summary of malvasia bianca blog](https://malvasiabianca.org/archives/2018/08/kittens-game/); [Jay is Games review](https://jayisgames.com/review/kittens-game.php)
+- **Cookie Clicker's hidden narrative:** "around the time players unlock their 10th grandma, the game's language begins to change". Upgrade flavour text turns ominous (e.g. "They are not your grandmas. They never were. They are conduits"), and the Grandmapocalypse then changes the background and the game window in 3 escalating stages. — [search summary of Cookie Clicker wikis](https://cookieclicker.wiki.gg/wiki/Grandmapocalypse); [Upgrades trivia](https://cookieclicker.wiki.gg/wiki/Upgrades/Trivia)
+- **Inscryption (Daniel Mullins)** shifts genre between acts. Mullins: "If players' prior expectations are no longer a guide, they have to take things as they come." He liked "the vibe of a creepypasta and the idea that you're seeing things that you weren't meant to see." — [Game Developer](https://www.gamedeveloper.com/marketing/-i-inscryption-s-i-journey-from-game-jam-joint-to-cult-classic); [search summary of Game Rant interview](https://gamerant.com/inscryption-interview-developer-daniel-mullins-3d-retro-horror-games/)
+- **Pacing cadence in Subnautica:** "for the first half of the game, new SOS beacons appear every hour or so, to gently push the player to explore different areas". Robert Yang notes this structure then collapses midway, leaving players without direction. — [Robert Yang, Radiator Blog, "Mapping the sea floors of Subnautica"](https://www.blog.radiator.debacle.us/2018/02/mapping-sea-floors-of-subnautica.html)
+- **Pacing in Dave the Diver:** director Jaeho Hwang spent "a lot of time testing progression pacing and introducing unexpected events". Because players "would eventually get tired seeing the same villagers every day," the team added surprise outside visitors. — [search summary of Dave the Diver director interviews](https://automaton-media.com/en/interviews/dave-the-divers-in-the-jungle-expansion-is-basically-dave-the-diver-1-7-says-director-even-players-who-usually-skip-dlc-should-give-it-a/) (full article text not retrieved; treat the wording as a paraphrase)
+
+**What is hidden vs teased, and what creates or spoils curiosity**
+- **Dome Keeper director René Habermann on enemy design:** "The single color shapes are best for this. It seems true that the best things happen in your mind… not visually 'overshare' the nature of the monsters, leaving more room to player imagination." — [Game Developer, "How Dome Keeper focuses on systems that feed into one another"](https://www.gamedeveloper.com/business/how-dome-keeper-focuses-on-systems-that-feed-into-one-another)
+- **Dome Keeper sound designer Martin Kvale:** "When you hear an ambience that you haven't heard before, you know there is something unknown on its way and that you may be in trouble." Sound is used as a new-threat tease. — [Game Developer](https://www.gamedeveloper.com/business/how-dome-keeper-focuses-on-systems-that-feed-into-one-another)
+- **Dome Keeper gadgets:** "little helpers you can find underground which open up the gameplay to new possibilities." Discovery happens inside the dig, not in a menu. — [Game Developer](https://www.gamedeveloper.com/business/how-dome-keeper-focuses-on-systems-that-feed-into-one-another)
+- **Dome Keeper Relic Hunt:** the relic chamber is "usually located in the deepest layer of the map" and must be opened by activating multiple connected nodes. — [search summary of Dome Keeper Wiki: Relic Hunt](https://domekeeper.wiki.gg/wiki/Relic_Hunt)
+- **Subnautica, sound before sight:** players "often hear creatures long before they see them for the first time." The Reaper Leviathan's roar carries far, so hearing it "could mean the Reaper is a mile away, or right behind you." — [search summary of The Geekwave, "Subnautica and Sound"](https://thegeekwave.com/2020/06/subnautica-and-sound/)
+- **Monica Evans (Game Studies, 2024)** on forced descent: dread comes from forced descent ("you have to go down there, you can't tell if you're prepared, and there's no guarantee you'll make it back"). Players get "just enough information to know that they should be cautious, but not enough to claim mastery." The player starts with 45 seconds of oxygen, so the environment itself is the threat. — [Game Studies, "Too Afraid to Go Deeper"](https://gamestudies.org/2404/articles/evans)
+- **Subnautica has no in-game map or mapping mechanism at all.** Players navigate by landmarks ("ok there's that pointy reef and the round hill so I should turn left…"). Yang notes the downside: "it's easy to get lost and miss important landmarks." — [Radiator Blog](https://www.blog.radiator.debacle.us/2018/02/mapping-sea-floors-of-subnautica.html)
+- **Balatro's undiscovered items:** they show "a placeholder item with a question mark in the middle". Hovering says "Not Discovered" and gives "an instruction on how to discover the item". Unlocked-but-unbought jokers show a silhouette. A bare "?" is paired with a concrete clue. — [Balatro Wiki: Discoverability](https://balatrowiki.org/w/Discoverability); [search summary](https://balatrowiki.org/w/Collection)
+- **Vampire Survivors' hidden unlocks:** some are secret until a prerequisite (e.g. Arcana after Randomazzo). Secret codes typed on the title screen unlock hidden characters and stages as "intentional developer Easter eggs". — [Vampire Survivors Wiki](https://vampire.survivors.wiki/w/Achievements); [search summary of Android Police](https://www.androidpolice.com/vampire-survivors-best-secrets-unlocks/)
+- **Metroidvania-style teasing:** "you can see platforms and doors off in the distance or up above, but you can't necessarily reach them until you get the necessary upgrade. This keeps the sense of wonder and curiosity alive." This is a secondary, blog-level source. — [search summary of DualShockers / Medium](https://www.dualshockers.com/metroidvania-game-maps/)
+- **Loewenstein's information-gap theory:** curiosity is the drive to close a perceived gap. "When the knowledge gap is too large or too small, motivation to seek information declines". Players' tolerance for a gap "is directly related to their confidence in their ability to close it." — [search summaries of Psychology Fanatic / Decision Lab](https://psychologyfanatic.com/information-gap-theory/); [Taylor & Francis curiosity framework study (2024)](https://www.tandfonline.com/doi/full/10.1080/10447318.2024.2325171)
+- **To, Ali, Kaufman & Hammer (DiGRA 2016):** designers "can thus induce curiosity by creating or increasing the salience of information gaps". The paper describes five curiosity types: perceptual, manipulatory, complex/ambiguous, conceptual and adjustive-reactive. — [DiGRA Digital Library abstract](https://dl.digra.org/index.php/dl/article/view/793)
+
+**Reward schedules: variable rewards, near-misses, first-time surprises**
+- **Peter Howell (University of Portsmouth) on Vampire Survivors:**
+  - It uses "multilayered rewards" (in-run gold spent between runs), so "no run ever feels wasted."
+  - Falling short of the 30-minute mark creates a gambling-style near-miss that prompts "another run."
+  - Achievements "ticked off from a lengthy list" drive replay with new characters.
+  - Designer Luca Galante "applied his previous experience in the gambling industry."
+
+  — [The Conversation](https://theconversation.com/vampire-survivors-how-developers-used-gambling-psychology-to-create-a-bafta-winning-game-203613)
+- **Pacing inside a run (Vampire Survivors):** comfortable domination alternates with spikes of tension as bigger enemy groups arrive, which keeps players in "flow". — [The Conversation](https://theconversation.com/vampire-survivors-how-developers-used-gambling-psychology-to-create-a-bafta-winning-game-203613)
+- **Anthony Pecorella (Kongregate)** gave the GDC talks "Idle Games: The Mechanics and Monetization of Self-Playing Games" (2015) and "Quest for Progress: The Math and Design of Idle Games" (GDC Europe 2016). They cover generators, prestige, and players' feelings about growth and complexity. Prestige gives "a rush of progress". Layered prestige (e.g. Realm Grinder's abdicate / reincarnate / ascend) unlocks "entirely new content, meta-currencies, or gameplay modes". — [GDC Vault 2016](https://www.gdcvault.com/play/1023876/Quest-for-Progress-The-Math); [GDC Vault 2015](https://www.gdcvault.com/play/1022065); [search summary of slides](https://www.slideshare.net/slideshow/quest-for-progress-gdc-europe-2016/65405507). The slide PDF could not be text-extracted, so no direct slide quotes are included.
+- **Idle developer feedback on pacing:** "showing the next unlock's condition and subtle progress bars provide incentive to keep playing in the early game." Players dislike a long wait for the first upgrade followed by an even longer wait for the next. This comes from itch.io jam comments and is anecdotal. — [search summary of itch.io threads](https://itch.io/post/15330988)
+
+### Inferences
+- **Why "the game keeps changing" gets raves:** a shift resets the player's knowledge, which reopens the Loewenstein gap every time. Players are no longer only optimising numbers; they are wondering what the numbers are for. PopMatters' and Mullins' comments both support this. The Paper Pilot names it explicitly as the source of "a sense of mystery".
+- **Where the suspense comes from:** these games do not show things slowly for its own sake. Their suspense comes from three things together:
+  - withholding the goal and the next genre;
+  - small, answerable questions every few minutes (a new button or a stranger arriving);
+  - one big unanswerable question that runs the whole game ("what is this world?", "what are the grandmas?", "what happens when Earth runs out?").
+- **What spoils curiosity:**
+  - showing a full grid of "?" nodes, which is a gap too large and unanswerable, so curiosity drops;
+  - a bestiary or map that lists everything up front;
+  - rendering monsters in full detail before they are met (Habermann's "overshare");
+  - text that explains the twist.
+- **What builds curiosity:**
+  - a placeholder plus a specific clue (Balatro);
+  - a sound before a sight (Subnautica, Dome Keeper);
+  - a flat silhouette (Dome Keeper);
+  - a visible but unreachable place;
+  - flavour text that slowly turns wrong (Cookie Clicker).
+
+**Trenchbore takeaways (all my inference, not sourced):**
+- **Change the game with depth.** Treat the 9 zones as rhythm changes, not just harder rock. Examples:
+  - one zone where light matters, so the headlamp becomes a resource;
+  - one where you are hunted, so noise from the drill attracts things;
+  - one where currents push the sub;
+  - one where the zone below "answers back" with signals.
+
+  At least one mid-game shift should change the main screen (as Paperclips' drone phase did). For example, the sub could anchor and deploy drones, or the logbook could start decoding transmissions.
+- **Keep one big mystery the whole game.** Why is there a trench, who dug it, and what is at the bottom? Deliver it through logbook fragments with redacted words that fill in as you go deeper. This adapts Cookie Clicker's upgrade text that slowly turns ominous, applied to a submarine logbook.
+- **Tease each zone with its sound first.** On the dive before a new zone opens, play its ambience or a distant creature call faintly at the current floor (Kvale's rule). Show the next boss only as a silhouette on the depth gauge, or a shadow passing the viewport, until the first encounter.
+- **Draw the map as a darkening cross-section.** Explored zones are drawn in; the next zone is a dark band with one landmark hint ("a warm glow at 1,200m"); zones beyond that are black. Do not use a grid of "?".
+- **Pace the reveals.** Aim for a small new thing every few minutes early on (new ore, new node ring, new sound) and a structural surprise per zone: a new tab, a new tool found in the rock, a genre twist. Subnautica's "every hour or so" beacon cadence is the long-form version. Avoid its mid-game collapse by always keeping one visible next lead.
+- **Put finds in the dig, not the shop.** Following Dome Keeper's gadgets, the most exciting unlocks should be found in the rock: a relic, a derelict module. Buying them from the tree is less exciting. The first find of each kind should get a one-time freeze-frame and sound.
+- **Build near-misses and rare surprises into the reward schedule.** Show "you were 40m from the next zone" on death. Add rare ore veins with a distinct sparkle sound. Relics should be rare and unannounced, while milestones stay predictable, so both a variable layer and a reliable layer exist.
+- **Aim for memorability over length.** Nodebuster sold as a ~4-hour game and Paperclips is remembered for its turn. A tight 4–6 hour paid game with 2–3 genuine surprises, plus an ending that reframes the dive, is likely more memorable than a long grind.
+
+### Gaps
+- **Reveal cadence:** I found no rigorous source giving a measured reveal cadence (e.g. "a new mechanic every 2 minutes") for Candy Box, A Dark Room, Paperclips or Nodebuster. The "every few minutes" advice above is inferred. The only measured cadence found was Subnautica's beacons "every hour or so".
+- **Unfetched talks:**
+  - Pecorella's slide text could not be extracted, and no summary with direct quotes on unlock pacing was found.
+  - I did not locate a GDC talk specifically on A Dark Room. Michael Townsend quotes on its reveal design were not found; the PocketGamer piece quotes Amir Rajan, the iOS port developer, instead.
+  - Charlie Cleveland's GDC 2019 "The Design of Subnautica" was not fetched ([GDC Vault](https://gdcvault.com/play/1025745/The-Design-of-Subnautica)), so his own rationale for having no map is unverified.
+- **Paraphrases:** the Dave the Diver director quotes are search-snippet paraphrases; the full interview text was not retrieved.
+- **Missing player data:** no source directly compares silhouettes vs "?" vs fully hidden nodes in upgrade trees with player data. The spoil-vs-tease conclusions are drawn from design commentary and curiosity theory.
