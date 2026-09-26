@@ -1,0 +1,286 @@
+<title>Trenchbore</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Saira+Stencil+One&family=Share+Tech+Mono&display=swap">
+<style>
+  :root {
+    color-scheme: dark;
+    --abyss: #03080f; --hull: #f0b429; --hull-dark: #1a1405; --ink: #dbe9f7; --mist: #8fb3c4;
+    --print: #0a2340; --print-line: rgba(140,190,255,.5); --print-text: #d4e6ff;
+    --teal: #3fe0c5; --coral: #ff7a59; --gold: #f6c453; --violet: #b18cff; --bubble: #7fd8ff; --green: #7be08a; --pearl: #e8e2ff;
+  }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--abyss); color: var(--ink); font-family: "Chakra Petch", ui-sans-serif, system-ui, sans-serif; overflow: hidden; }
+  #viewport { position: fixed; inset: 0; overflow: hidden; background: var(--abyss); }
+  #stage { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; transform-origin: 0 0; font-size: 18px; overflow: hidden; border-radius: 8px; }
+  #cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #cv.playing { cursor: none; }
+  .screen { position: absolute; inset: 0; }
+  button { font: inherit; cursor: pointer; color: inherit; }
+  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+  h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
+  p { margin: 0; line-height: 1.45; }
+  .mono { font-family: "Share Tech Mono", monospace; }
+  .coin { display: inline-block; width: .7em; height: .7em; border-radius: 50%; background: var(--gold); box-shadow: inset -.12em -.12em 0 rgba(0,0,0,.25); vertical-align: -.02em; }
+  .spec { display: inline-block; width: .7em; height: .7em; border-radius: 50%; background: var(--green); vertical-align: -.02em; }
+  .pearl { display: inline-block; width: .7em; height: .7em; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff, #b8b0e8); vertical-align: -.02em; }
+  .launch {
+    font-family: "Saira Stencil One", sans-serif; font-size: 34px; letter-spacing: .06em; color: var(--hull-dark); padding: 14px 38px;
+    border: 7px solid transparent; border-radius: 6px;
+    background-image: linear-gradient(var(--hull), var(--hull)), repeating-linear-gradient(45deg, #15120a 0 11px, var(--hull) 11px 22px);
+    background-origin: border-box; background-clip: padding-box, border-box; box-shadow: 0 6px 0 #6b4e0c;
+  }
+  .launch:hover { filter: brightness(1.07); } .launch:active { transform: translateY(3px); box-shadow: 0 3px 0 #6b4e0c; }
+  .plain { font-family: "Share Tech Mono", monospace; font-size: 16px; letter-spacing: .04em; text-transform: uppercase; padding: 11px 16px; border-radius: 4px; border: 1px solid rgba(219,233,247,.35); background: rgba(3,8,15,.6); color: var(--ink); }
+  .plain:hover { border-color: var(--ink); } .plain.danger { color: var(--coral); border-color: var(--coral); }
+  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+  /* title */
+  #title { padding: 70px 0 0 84px; box-sizing: border-box; display: flex; flex-direction: column; gap: 22px; background: linear-gradient(to right, rgba(3,8,15,.82) 0, rgba(3,8,15,.55) 34%, rgba(3,8,15,0) 52%); }
+  #title > * { max-width: 640px; }
+  #title .kicker { font-family: "Share Tech Mono", monospace; font-size: 16px; letter-spacing: .2em; color: var(--mist); text-transform: uppercase; }
+  #title h1 { font-family: "Saira Stencil One", sans-serif; font-size: 128px; line-height: .84; color: #f4efe2; text-shadow: 0 4px 30px rgba(0,0,0,.45); }
+  #title h1 span { color: var(--hull); }
+  #title .tag { font-size: 22px; color: #d7e3ec; max-width: 540px; text-shadow: 0 2px 12px rgba(0,0,0,.7); }
+  .demo-badge { display: inline-block; font-family: "Share Tech Mono", monospace; color: #1a1405; background: var(--hull); padding: 3px 10px; font-size: 15px; letter-spacing: .12em; }
+
+  /* dock */
+  #dock { background-color: var(--print);
+    background-image: linear-gradient(rgba(140,190,255,.11) 1px, transparent 1px), linear-gradient(90deg, rgba(140,190,255,.11) 1px, transparent 1px), linear-gradient(rgba(140,190,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(140,190,255,.045) 1px, transparent 1px);
+    background-size: 200px 200px, 200px 200px, 40px 40px, 40px 40px; color: var(--print-text); }
+  .report { position: absolute; left: 0; top: 0; bottom: 0; width: 420px; box-sizing: border-box; padding: 26px 30px 26px 34px; display: flex; flex-direction: column; gap: 14px; background: rgba(4,16,32,.88); border-right: 2px solid var(--print-line); }
+  .report .head { display: flex; justify-content: space-between; font-family: "Share Tech Mono", monospace; letter-spacing: .12em; font-size: 14px; color: var(--mist); border-bottom: 1px solid var(--print-line); padding-bottom: 8px; }
+  .report h2 { font-family: "Saira Stencil One", sans-serif; font-size: 30px; line-height: 1.02; color: #f4efe2; }
+  .report h2.good { color: var(--teal); }
+  #rHint { color: #a9c3dc; font-size: 15px; margin-top: 6px; }
+  .rows { margin: 0; display: flex; flex-direction: column; gap: 4px; font-family: "Share Tech Mono", monospace; font-size: 15px; }
+  .rows div { display: flex; gap: 8px; align-items: baseline; }
+  .rows dt { color: var(--mist); display: flex; flex: 1; gap: 8px; }
+  .rows dt::after { content: ""; flex: 1; border-bottom: 1px dotted rgba(143,179,196,.45); transform: translateY(-4px); }
+  .rows dd { margin: 0; color: var(--print-text); font-variant-numeric: tabular-nums; }
+  .wallet { display: grid; grid-template-columns: 1fr; gap: 2px; }
+  .wallet .big { font-family: "Saira Stencil One", sans-serif; font-size: 46px; line-height: 1; color: var(--gold); display: flex; align-items: center; gap: 12px; }
+  .wallet .big .coin { width: 28px; height: 28px; }
+  .wallet .small { font-family: "Share Tech Mono", monospace; font-size: 17px; display: flex; gap: 18px; }
+  .wallet .small span { display: flex; gap: 7px; align-items: center; }
+  #subStats { border: 1.5px solid var(--print-line); border-radius: 4px; padding: 12px 14px 10px; position: relative; background: rgba(10,35,64,.7); display: grid; gap: 3px; font-family: "Share Tech Mono", monospace; font-size: 15px; }
+  #subStats::before { content: "YOUR SUB"; position: absolute; top: -10px; left: 12px; padding: 0 6px; background: #081a30; font-size: 12px; letter-spacing: .16em; color: var(--mist); }
+  #subStats div { display: flex; justify-content: space-between; gap: 10px; } #subStats span { color: var(--mist); } #subStats b { font-weight: 400; }
+  .report .bottom { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
+  #startLine { font-family: "Share Tech Mono", monospace; font-size: 14px; color: var(--mist); } #startLine b { color: var(--print-text); font-weight: 400; }
+  .ctl { display: flex; flex-direction: column; gap: 5px; }
+  .ctl > span { font-family: "Share Tech Mono", monospace; font-size: 12px; letter-spacing: .14em; color: var(--mist); }
+  .ctl div { display: flex; gap: 4px; }
+  .ctl button { flex: 1; font-family: "Share Tech Mono", monospace; font-size: 13px; padding: 7px 4px; border: 1px solid rgba(219,233,247,.3); border-radius: 3px; background: rgba(3,8,15,.5); color: var(--mist); }
+  .ctl button.on { background: var(--hull); border-color: var(--hull); color: var(--hull-dark); font-weight: 700; }
+  .tabs { position: absolute; left: 420px; right: 0; top: 0; height: 66px; display: flex; align-items: flex-end; gap: 3px; padding: 0 24px; border-bottom: 2px solid var(--print-line); }
+  .tab { font-family: "Saira Stencil One", sans-serif; font-size: 21px; letter-spacing: .04em; padding: 9px 18px 7px; border: 2px solid var(--print-line); border-bottom: 0; border-radius: 6px 6px 0 0; background: transparent; color: var(--mist); transform: translateY(2px); }
+  .tab.on { background: var(--print); color: #f4efe2; }
+  .tab .n { font-family: "Share Tech Mono", monospace; font-size: 12px; color: var(--gold); margin-left: 5px; }
+  .tabs .gear { margin-left: auto; align-self: center; transform: none; }
+  .pane { position: absolute; left: 420px; right: 0; top: 66px; bottom: 0; }
+  .pane.scroll { overflow-y: auto; padding: 24px 32px 40px; box-sizing: border-box; }
+  .pane h3 { font-family: "Share Tech Mono", monospace; font-size: 14px; letter-spacing: .16em; color: var(--mist); margin: 6px 0 12px; }
+
+  /* tree */
+  #treeCv { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; }
+  #treeCv.drag { cursor: grabbing; }
+  #tip { position: absolute; right: 20px; bottom: 20px; width: 360px; box-sizing: border-box; padding: 14px 16px; border: 1.5px solid var(--print-line); border-radius: 4px; background: rgba(4,16,32,.94); display: grid; gap: 5px; pointer-events: none; }
+  #tip .br { font-family: "Share Tech Mono", monospace; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+  #tip b { font-size: 20px; color: #f4efe2; }
+  #tip .fx { color: #c5d8ee; } #tip .lv { font-family: "Share Tech Mono", monospace; font-size: 14px; color: var(--mist); }
+  #tip .cost { font-weight: 700; } #tip .cost.no { color: var(--mist); font-weight: 600; } #tip .cost.lock { color: var(--coral); font-weight: 600; }
+  .treebar { position: absolute; left: 20px; bottom: 20px; display: flex; gap: 6px; align-items: center; }
+  .treebar button { width: 40px; height: 40px; padding: 0; font-size: 22px; line-height: 1; }
+  .treebar span { font-family: "Share Tech Mono", monospace; font-size: 13px; color: var(--mist); margin-left: 8px; max-width: 520px; }
+
+  /* relics, logbook, achievements, stats, map */
+  .grid { display: grid; gap: 12px; }
+  .relics { grid-template-columns: repeat(4, 1fr); }
+  .card { border: 1.5px solid var(--print-line); border-radius: 4px; background: rgba(4,16,32,.78); padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+  .card b { color: #f4efe2; font-size: 17px; } .card .meta { font-family: "Share Tech Mono", monospace; font-size: 13px; color: var(--mist); }
+  .card .fx { color: var(--teal); font-size: 14.5px; } .card .desc { color: #a9c3dc; font-size: 14px; line-height: 1.35; }
+  .card.off { border-style: dashed; opacity: .6; }
+  .rank { font-family: "Share Tech Mono", monospace; color: var(--gold); }
+  .specimens { grid-template-columns: repeat(5, 1fr); }
+  .specimens canvas { width: 100%; aspect-ratio: 440 / 260; height: auto; display: block; border-bottom: 1px dashed rgba(140,190,255,.3); }
+  .logs { display: flex; flex-direction: column; gap: 8px; font-family: "Share Tech Mono", monospace; font-size: 15px; max-width: 980px; }
+  .logs div { padding: 10px 14px; border-left: 3px solid var(--teal); background: rgba(4,16,32,.6); color: #cfe3f5; line-height: 1.45; }
+  .logs div.heron { border-color: var(--hull); }
+  .achs { grid-template-columns: repeat(4, 1fr); }
+  .card.got { border-color: var(--teal); } .card.got b::before { content: "✓ "; color: var(--teal); }
+  .stats { font-family: "Share Tech Mono", monospace; font-size: 17px; max-width: 700px; }
+  .map { display: grid; grid-template-columns: 110px 1fr; gap: 0 18px; max-width: 980px; }
+  .map .z { display: contents; }
+  .map .d { font-family: "Share Tech Mono", monospace; color: var(--bubble); text-align: right; padding: 12px 0; border-bottom: 1px solid rgba(140,190,255,.2); }
+  .map .info { padding: 10px 14px; border-bottom: 1px solid rgba(140,190,255,.2); border-left: 4px solid var(--c); display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; }
+  .map .info b { font-family: "Saira Stencil One", sans-serif; font-weight: 400; font-size: 22px; color: #f4efe2; }
+  .map .info .boss { color: var(--coral); text-align: right; } .map .info .boss.done { color: var(--teal); }
+  .map .info .note { grid-column: 1 / -1; color: var(--mist); font-size: 14px; }
+  .map .z.locked .info { opacity: .45; }
+
+  /* overlays */
+  .modal { position: absolute; inset: 0; background: rgba(2,6,12,.78); display: grid; place-items: center; z-index: 10; }
+  .modal .box { width: 720px; max-height: 820px; overflow-y: auto; box-sizing: border-box; padding: 28px 32px; background: var(--print); border: 2px solid var(--print-line); border-radius: 6px; display: flex; flex-direction: column; gap: 16px; }
+  .modal h2 { font-family: "Saira Stencil One", sans-serif; font-size: 40px; color: #f4efe2; }
+  .set { display: grid; grid-template-columns: 180px 1fr; gap: 12px 18px; align-items: center; font-size: 17px; }
+  .set label { color: var(--mist); font-family: "Share Tech Mono", monospace; font-size: 15px; }
+  .set input[type=range] { width: 100%; accent-color: var(--hull); }
+  .set select { font: inherit; background: #06182c; color: var(--ink); border: 1px solid var(--print-line); padding: 6px 8px; }
+  textarea { width: 100%; box-sizing: border-box; height: 70px; font-family: "Share Tech Mono", monospace; font-size: 12px; background: #06182c; color: var(--ink); border: 1px solid var(--print-line); padding: 8px; resize: none; }
+  #pause .box { text-align: center; align-items: center; width: 560px; }
+  #ending { background: #020306; display: flex; flex-direction: column; justify-content: center; gap: 22px; padding: 0 0 0 140px; z-index: 11; }
+  #ending.seal { background: radial-gradient(ellipse at 50% -10%, rgba(80,160,200,.35), #020306 60%); }
+  #ending.break { background: radial-gradient(ellipse at 50% 120%, rgba(180,20,30,.5), #020306 60%); }
+  #ending > * { max-width: 900px; }
+  #ending h2 { font-family: "Saira Stencil One", sans-serif; font-size: 80px; line-height: .96; color: #ffe0d0; }
+  #endLines p { font-family: "Share Tech Mono", monospace; font-size: 22px; color: #e8d8d0; margin-bottom: 8px; opacity: 0; transition: opacity 1.2s; }
+  #endLines p.on { opacity: 1; }
+  #credits { font-family: "Share Tech Mono", monospace; font-size: 16px; color: var(--mist); display: grid; grid-template-columns: 260px 1fr; gap: 4px 20px; }
+  #choice .box { text-align: center; align-items: center; }
+  #choice p { font-family: "Share Tech Mono", monospace; font-size: 18px; color: #e8d8d0; max-width: 560px; }
+  #toasts { position: absolute; top: 82px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 8px; z-index: 9; pointer-events: none; }
+  .toast { padding: 10px 18px; background: rgba(4,16,32,.95); border: 1.5px solid var(--teal); border-radius: 4px; font-family: "Share Tech Mono", monospace; font-size: 16px; color: #f4efe2; animation: toast 4s forwards; }
+  .toast b { color: var(--teal); font-weight: 400; }
+  @keyframes toast { 0% { opacity: 0; transform: translateY(-8px); } 8%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .toast { animation: none; } #endLines p { transition: none; } }
+</style>
+
+<div id="viewport">
+  <div id="stage">
+    <canvas id="cv" aria-label="Trenchbore game view"></canvas>
+
+    <section class="screen" id="title">
+      <span class="kicker">Salvage sub Minnow · Meridian Salvage <span class="demo-badge" id="demoBadge" hidden>DEMO</span></span>
+      <h1>TRENCH<br><span>BORE</span></h1>
+      <p class="tag">Drill your way down an ocean trench in a one-seat sub. The deeper you go, the worse the things that live there.</p>
+      <div class="row">
+        <button class="launch" id="btnPlay">Launch</button>
+        <button class="plain" id="btnNew" hidden>New game</button>
+        <button class="plain" id="btnSettings1">Settings</button>
+      </div>
+    </section>
+
+    <section class="screen" id="dock" hidden>
+      <aside class="report">
+        <div class="head"><span>DIVE REPORT</span><span id="rNo">Nº 00</span></div>
+        <div><h2 id="rTitle">Docked</h2><p id="rHint"></p></div>
+        <dl class="rows" id="rRows"></dl>
+        <div class="wallet">
+          <div class="big"><i class="coin"></i><span id="wCr">0</span></div>
+          <div class="small"><span id="wSp" hidden><i class="spec"></i><b id="wSpN">0</b></span><span id="wPe" hidden><i class="pearl"></i><b id="wPeN">0</b></span></div>
+        </div>
+        <div id="subStats"></div>
+        <div class="bottom">
+          <div class="ctl"><span>CONTROLS</span><div><button data-ctl="arm">Drill arm</button><button data-ctl="follow">Follow mouse</button><button data-ctl="keys">Keyboard</button></div></div>
+          <p id="startLine"></p>
+          <button class="launch" id="btnDive">Launch</button>
+        </div>
+      </aside>
+      <nav class="tabs" aria-label="Dock">
+        <button class="tab on" data-tab="workshop">Workshop</button>
+        <button class="tab" data-tab="relics">Relics<span class="n" id="nRelics"></span></button>
+        <button class="tab" data-tab="logbook">Logbook<span class="n" id="nLog"></span></button>
+        <button class="tab" data-tab="map">Map</button>
+        <button class="tab" data-tab="stats">Stats</button>
+        <button class="tab" data-tab="ach">Awards<span class="n" id="nAch"></span></button>
+        <button class="plain gear" id="btnSettings2">Settings</button>
+        <button class="plain gear" id="btnMenu" style="margin-left:6px">Menu</button>
+      </nav>
+      <div class="pane" id="p-workshop">
+        <canvas id="treeCv" aria-label="Upgrade tree. Drag to move, scroll to zoom, click a part to buy it."></canvas>
+        <div class="treebar"><button class="plain" id="zIn" aria-label="Zoom in">+</button><button class="plain" id="zOut" aria-label="Zoom out">−</button><button class="plain" id="zHome" aria-label="Centre the tree">◎</button><span>Click a part to buy · Shift-click buys max · Drag to move · Scroll to zoom</span></div>
+        <div id="tip"></div>
+      </div>
+      <div class="pane scroll" id="p-relics" hidden><h3>RELIC CASE · DUPLICATES RANK A RELIC UP TO III</h3><div class="grid relics" id="relicGrid"></div></div>
+      <div class="pane scroll" id="p-logbook" hidden><h3>SPECIMENS</h3><div class="grid specimens" id="specGrid"></div><h3 style="margin-top:26px">THE HERON'S LOGS</h3><div class="logs" id="heronLogs"></div><h3 style="margin-top:26px">RADIO LOG</h3><div class="logs" id="radioLog"></div></div>
+      <div class="pane scroll" id="p-map" hidden><h3>THE TRENCH</h3><div class="map" id="mapList"></div></div>
+      <div class="pane scroll" id="p-stats" hidden><h3>RECORDS</h3><dl class="rows stats" id="statList"></dl></div>
+      <div class="pane scroll" id="p-ach" hidden><h3>AWARDS</h3><div class="grid achs" id="achGrid"></div></div>
+    </section>
+
+    <section class="modal" id="pause" hidden>
+      <div class="box">
+        <h2>PAUSED</h2>
+        <p class="mono" style="color:var(--mist)">Oxygen is on hold.</p>
+        <div class="ctl" style="width:100%"><span>CONTROLS</span><div><button data-ctl="arm">Drill arm</button><button data-ctl="follow">Follow mouse</button><button data-ctl="keys">Keyboard</button></div></div>
+        <div class="row" style="justify-content:center">
+          <button class="launch" id="btnResume">Resume</button>
+          <button class="plain" id="btnSurface">Surface now</button>
+          <button class="plain" id="btnSettings3">Settings</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="modal" id="settings" hidden>
+      <div class="box">
+        <h2>SETTINGS</h2>
+        <div class="set">
+          <label for="sMaster">Master volume</label><input type="range" id="sMaster" min="0" max="1" step="0.05">
+          <label for="sMusic">Music</label><input type="range" id="sMusic" min="0" max="1" step="0.05">
+          <label for="sSfx">Sound effects</label><input type="range" id="sSfx" min="0" max="1" step="0.05">
+          <label for="sNotation">Big numbers</label><select id="sNotation"><option value="short">1.25M, 3.40B</option><option value="sci">1.25e6</option></select>
+          <label for="sShake">Screen shake</label><select id="sShake"><option value="1">On</option><option value="0.5">Low</option><option value="0">Off</option></select>
+          <label for="sParticles">Particles</label><select id="sParticles"><option value="1">High</option><option value="0.5">Low</option></select>
+          <label>Fullscreen</label><button class="plain" id="sFull">Toggle fullscreen</button>
+        </div>
+        <h3 class="mono" style="font-size:14px;letter-spacing:.14em;color:var(--mist)">SAVE</h3>
+        <p style="font-size:15px;color:#a9c3dc">Progress saves by itself after every dive and purchase. Copy this code to move your save to another computer or into the full game.</p>
+        <textarea id="saveCode" readonly aria-label="Save code"></textarea>
+        <div class="row"><button class="plain" id="btnCopy">Copy save code</button></div>
+        <textarea id="importCode" placeholder="Paste a save code here" aria-label="Paste a save code"></textarea>
+        <div class="row"><button class="plain" id="btnImport">Load pasted save</button><span id="importMsg" class="mono" style="color:var(--mist);font-size:14px"></span></div>
+        <div class="row" style="justify-content:space-between"><button class="plain danger" id="btnWipe">Erase all progress</button><button class="launch" id="btnCloseSet">Done</button></div>
+      </div>
+    </section>
+
+    <section class="modal" id="choice" hidden>
+      <div class="box">
+        <h2>THE HEART</h2>
+        <p>The Heart is open in front of you. You have all six of the Heron's logs. You know what the words on the city walls mean.</p>
+        <div class="row" style="justify-content:center"><button class="launch" id="btnSeal">Seal it</button><button class="plain" id="btnBreak">Break it</button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="ending" hidden>
+      <span class="mono" style="letter-spacing:.2em;color:var(--mist)" id="endKicker">ENDING</span>
+      <h2 id="endTitle"></h2>
+      <div id="endLines"></div>
+      <div id="credits" hidden></div>
+      <p class="mono" id="endStats" style="color:var(--mist);font-size:17px"></p>
+      <div class="row" id="endBtns" hidden><button class="launch" id="btnNG">New Dive+</button><button class="plain" id="btnKeep">Back to the dock</button></div>
+    </section>
+
+    <section class="modal" id="demoEnd" hidden>
+      <div class="box">
+        <h2>END OF THE DEMO</h2>
+        <p style="font-size:18px">You beat the Anglerfish. Below it: the Midnight Trench, the Wreck Graveyard, the vents, a drowned city, and whatever is under the trench floor.</p>
+        <p style="font-size:16px;color:#a9c3dc">The full game on itch.io has nine zones, nine bosses, 81 upgrades, 24 relics and two endings. Your progress carries over: copy your save code in Settings and paste it into the full game.</p>
+        <div class="row"><button class="launch" id="btnDemoOk">Keep playing the demo</button></div>
+      </div>
+    </section>
+
+    <div id="toasts" aria-live="polite"></div>
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/core.js"></script>
+<script src="js/data/tree.js"></script>
+<script src="js/data/world.js"></script>
+<script src="js/data/bosses.js"></script>
+<script src="js/data/relics.js"></script>
+<script src="js/data/story.js"></script>
+<script src="js/data/achievements.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/save.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/render/scene.js"></script>
+<script src="js/render/things.js"></script>
+<script src="js/render/bosses.js"></script>
+<script src="js/render/sub.js"></script>
+<script src="js/render/hud.js"></script>
+<script src="js/game.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
